@@ -477,14 +477,14 @@ start_time = time.time()
     #'estado': 'auto archivo',
     #'año_gravable': 2019
 #}
-filtross = {'nombre_auditor': 'jorge'}
-result = consulta.buscar_expedientes_filtrados(filtross)
-print(result)
+#filtross = {'nombre_auditor': 'jorge'}
+#result = consulta.buscar_expedientes_filtrados(filtross)
+#print(result)
 
 # Detiene el temporizador y calcula el tiempo transcurrido
-elapsed_time = time.time() - start_time
+#elapsed_time = time.time() - start_time
 
-consulta.imprimir_resultados(result)
+#consulta.imprimir_resultados(result)
 
 # Imprime el tiempo transcurrido
-print("Tiempo transcurrido:", elapsed_time, "segundos")
+#print("Tiempo transcurrido:", elapsed_time, "segundos")
