@@ -1,0 +1,3 @@
+pip install mysql-connector-python tk
+
+auditor	nombre 	nit/cc	tipo (natural/juridico)	proceso	estado(activo / auto archivo)
