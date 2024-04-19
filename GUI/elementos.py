@@ -33,8 +33,20 @@ class Elementos:
         self.boton_documento = None
 
     def elementos_gestion(self):
+        self.boton_expediente = None
+        self.imagen_expediente = None
+
+        self.boton_contribuyente = None
+        self.imagen_contribuyente = None
+
         self.boton_auditor = None
         self.imagen_auditor = None
+
+        self.boton_proceso = None
+        self.imagen_proceso = None
+
+        self.boton_prestamo = None
+        self.imagen_prestamo = None
 
     def elementos_crud(self):
         # ETIQUETAS

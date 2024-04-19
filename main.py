@@ -1,8 +1,8 @@
-from GUI.interfaz import Menu
+from GUI.interfaz import Interfaz
 
 
 if __name__ == "__main__":
-    gui = Menu()
+    gui = Interfaz()
 
     #ui.ventana.mainloop()
     gui.ventana_inicio.mainloop()

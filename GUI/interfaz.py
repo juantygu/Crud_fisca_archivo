@@ -4,10 +4,9 @@ from tkinter import PhotoImage
 from tkinter import ttk
 from entidades.auditor import *
 from GUI.elementos import Elementos
+from GUI.menu_interfaz.Menu_principal.menu_principal import MenuPrincipal
 
-
-
-class Menu():
+class Interfaz():
     def __init__(self):
         try:
 
@@ -21,6 +20,8 @@ class Menu():
             self.crear_ventana_inicio(self.ventana_inicio)
 
             self.estado_actual = None  # indica el estado actual de la interfaz
+            self.window_width = None # ancho de pantalla pc
+            self.window_height = None # altura de pantalla pc
 
         except ValueError as error:
             print("Error al mostrar la interfaz,error:{}".format(error))
@@ -63,20 +64,27 @@ class Menu():
         # ==========================================VENTANA===========================================================
         self.ventana_principal = tk.Tk()
         self.ventana_principal.title("ARCHIVO DE FISCALIZACIÓN")
-        self.ventana_principal.geometry('1080x600')
-        self.ventana_principal.minsize(600, 400)
-        self.ventana_principal.resizable(width=False, height=False)
+
+        self.window_width = self.ventana_principal.winfo_screenwidth()  # ancho de la ventana requerido gracias a la funcion .winfo_reqwidth()
+        self.window_height = self.ventana_principal.winfo_screenheight()  # alto de la ventana requerido gracias a la funcion .winfo_reqheight()
+        print("ancho=", self.window_width, "alto=",self.window_height)
+
+        self.ventana_principal.geometry(f"{self.window_width}x{self.window_height}+0+0")
+        #self.ventana_principal.minsize(600, 400)
+        self.ventana_principal.resizable(width=True, height=True)
 
         # Centrar la ventana en la pantalla
-        window_width = self.ventana_principal.winfo_screenwidth()  # ancho de la ventana requerido gracias a la funcion .winfo_reqwidth()
-        window_height = self.ventana_principal.winfo_screenheight()  # alto de la ventana requerido gracias a la funcion .winfo_reqheight()
-        wventana = 1080
-        hventana = 600
-        position_right = int(window_width / 2 - wventana / 2)  # posicion de la ventana la funcion winfo_screenwidth() determina el ancho de la pantalla
-        position_down = int(window_height / 2 - hventana / 2)  # posicion de la ventana la funcion winfo_screenheight() determina el alto de la pantalla
-        self.ventana_principal.geometry("+{}+{}".format(position_right, position_down))  # los valores position_right, position_down van en los corchetes gracias a la funcion .format
+        #position_right = int(ancho - (window_width // 2))  # posicion de la ventana la funcion winfo_screenwidth() determina el ancho de la pantalla
+        #position_down = int(largo - (window_height // 2))  # posicion de la ventana la funcion winfo_screenheight() determina el alto de la pantalla
+        #self.ventana_principal.geometry("+{}+{}".format(position_right, position_down))  # los valores position_right, position_down van en los corchetes gracias a la funcion .format
+
         self.ventana_principal.configure(bg='#E6F7FF')
-        self.set_estado_actual("menu principal")
+
+
+        # Crear instancia de MenuPrincipal y mostrar el menú principal
+        menu_principal = MenuPrincipal(self.ventana_principal, self.elementos, self)
+        menu_principal.mostrar_menu_principal()
+
         self.ventana_principal.mainloop()  # asigno el nuevo mainloo() que sera el hilo principal de la interfaz
 
     def verificar_credenciales(self):
@@ -98,13 +106,22 @@ class Menu():
     def atras(self): # CONDICIONES SI SE OPRIME EL BOTON REGRESAR
         if self.estado_actual == "consulta": # si esta en el estado consulta
             self.borrar_estado_anterior("consulta") # borra el estado consulta
-            self.set_estado_actual("menu principal") # pasa al estado menu principal
+
+            # Crear instancia de MenuPrincipal y mostrar el menú principal
+            menu_principal = MenuPrincipal(self.ventana_principal, self.elementos, self)
+            menu_principal.mostrar_menu_principal()
+
         if self.estado_actual == "gestion":
             self.borrar_estado_anterior("gestion")
-            self.set_estado_actual("menu principal")
-        if self.estado_actual == "gestion auditor":
-            self.borrar_estado_anterior("gestion auditor")
-            self.set_estado_actual("gestion")
+
+            # Crear instancia de MenuPrincipal y mostrar el menú principal
+            menu_principal = MenuPrincipal(self.ventana_principal, self.elementos, self)
+            menu_principal.mostrar_menu_principal()
+
+        if self.estado_actual == "modulo_gestion auditor":
+            self.borrar_estado_anterior("modulo_gestion auditor")
+
+            self.set_estado_actual("modulo_gestion")
 
     def borrar_estado_anterior(self,estado_anterior): # borra los elementos del estado en el estaba antes de dar click
 
@@ -118,9 +135,13 @@ class Menu():
             self.elementos.boton_atras.destroy()
         if estado_anterior == "gestion":
             self.elementos.label_titulo.destroy()
+            self.elementos.boton_expediente.destroy()
+            self.elementos.boton_contribuyente.destroy()
             self.elementos.boton_auditor.destroy()
+            self.elementos.boton_proceso.destroy()
+            self.elementos.boton_prestamo.destroy()
             self.elementos.boton_atras.destroy()
-        if estado_anterior == "gestion auditor":
+        if estado_anterior == "modulo_gestion auditor":
             self.elementos.label_titulo.destroy()
             self.elementos.boton_atras.destroy()
             self.elementos.label_frame.destroy()
@@ -172,8 +193,8 @@ class Menu():
             self.elementos.boton_atras = tk.Button(self.ventana_principal, text="ATRAS", font=("Arial", 12, "bold"),fg="black", bg="white", bd=4, relief=tk.GROOVE, width=15, height=2,command=self.atras)
             self.elementos.boton_atras.place(x=900, y=500)
 
-        if estado == "gestion": # menu registrar modificar
-            self.estado_actual = "gestion"
+        if estado == "modulo_gestion": # menu registrar modificar
+            self.estado_actual = "modulo_gestion"
             # Boton atras
             self.elementos.boton_atras = tk.Button(self.ventana_principal, text="ATRAS", font=("Arial", 12, "bold"), fg="black", bg="white",bd=4, relief=tk.GROOVE, width=15, height=2, command=self.atras)
             self.elementos.boton_atras.place(x=900, y=500)
@@ -188,8 +209,8 @@ class Menu():
             self.elementos.imagen_auditor = self.elementos.imagen_auditor.subsample(5)  # Ajusta el factor de reducción según sea necesario
             self.elementos.boton_auditor.config(image=self.elementos.imagen_auditor, compound="bottom")
 
-        if estado == "gestion auditor":
-            self.estado_actual = "gestion auditor"
+        if estado == "modulo_gestion auditor":
+            self.estado_actual = "modulo_gestion auditor"
             #titulo
             self.elementos.label_titulo = tk.Label(self.ventana_principal, text="GESTIÓN DE AUDITORES", font=("Arial", 30, "bold"),fg="black", bg="#E6F7FF")
             self.elementos.label_titulo.pack(pady=20)  # pady añade un espacio en la parte inferior de la etiqueta
@@ -364,26 +385,41 @@ class Menu():
 #==========CONSULTAR==================
     def on_boton_consultar(self):
         self.borrar_estado_anterior("menu principal")
-        self.set_estado_actual("consulta")
+
+
+        #self.set_estado_actual("consulta")
 
 #================FIN CONSULTAR=============================
 
 #===================REGISTRAR GESTION===================
     def on_boton_registrar_modificar(self):
         self.borrar_estado_anterior("menu principal")
-        self.set_estado_actual("gestion")
+        self.set_estado_actual("modulo_gestion")
 
 #================FIN REGISTRAR MODIFICAR =================
 
 #================REGISTAR MODIFICAR AUDITOR ==============
     def on_boton_auditor(self):
-        self.borrar_estado_anterior("gestion")
-        self.set_estado_actual("gestion auditor")
+        self.borrar_estado_anterior("modulo_gestion")
+        self.set_estado_actual("modulo_gestion auditor")
 
+    def calcular_posiciones_horizontal_botones(self, cantidad_botones, ancho_boton, ancho_pantalla):
+        # Calcular el espacio total ocupado por los botones y los espacios entre ellos
+        ancho_total_botones = cantidad_botones * ancho_boton
+        espacio_entre_botones = (ancho_pantalla - ancho_total_botones) // (cantidad_botones + 1)
 
+        # Calcular las posiciones x de los botones
+        posiciones_x = []
+        posicion_x_actual = espacio_entre_botones
+        for _ in range(cantidad_botones):
+            posiciones_x.append(posicion_x_actual)
+            posicion_x_actual += ancho_boton + espacio_entre_botones
 
+        return posiciones_x
 
-
+#ejemplo = Interfaz()
+#resultado= ejemplo.calcular_posiciones_horizontal_botones(3,300,1366)
+#print(resultado)
 
 #if __name__ == "__main__":
     #gui = Menu()
