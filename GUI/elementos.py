@@ -11,11 +11,21 @@ class Elementos:
         self.elementos_gestion()
         self.elementos_crud()
         self.variables_crud()
+        self.variables_inicio()
+        self.ventanas_emergentes()
 
     def elementos_inicio(self):
 
         self.entry_user = None
         self.entry_password = None
+        self.entry_user_admin = None
+        self.entry_password_admin = None
+
+    def variables_inicio(self):
+        self.usuario_var = tk.StringVar()
+        self.contraseña_var = tk.StringVar()
+        self.usuario_admin_var = tk.StringVar()
+        self.contraseña_admin_var = tk.StringVar()
 
     def elementos_menu_principal(self):
 
@@ -52,20 +62,38 @@ class Elementos:
         # ETIQUETAS
         self.label_frame = None
         self.label_id = None
+        self.label_cedula = None
         self.label_nombre = None
+        self.label_antiguo_id = None
+        self.label_nuevo_id = None
 
         # CAJAS DE TEXTO
         self.box_id = None
+        self.box_cedula = None
         self.box_nombre = None
+        self.box_antiguo_id = None
+        self.box_nuevo_id = None
 
         # BOTONES
-        self.boton_guardar = None
+        self.boton_insertar = None
         self.boton_modificar = None
         self.boton_eliminar = None
+        self.boton_limpiar_caja_auditores = None
+        self.boton_cambiar_id = None
+        self.boton_aceptar = None
+        self.boton_cancelar = None
+
 
         # TABLA
         self.tree = None
 
     def variables_crud(self):
         self.id_variable = tk.StringVar()
+        self.cedula_variable = tk.StringVar()
         self.nombre_variable = tk.StringVar()
+        self.antiguo_id = tk.StringVar()
+        self.nuevo_id = tk.StringVar()
+
+    def ventanas_emergentes(self):
+        self.ventana_credenciales = None
+        self.ventana_credenciales_abierta = False

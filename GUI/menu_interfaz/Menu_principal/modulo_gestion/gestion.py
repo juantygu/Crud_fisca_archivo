@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter import ttk
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
 
 
 class Gestion:
@@ -90,6 +91,7 @@ class Gestion:
         print(self.interfaz.estado_actual)
 
     def on_boton_auditor(self):
-        #self.borrar_estado_anterior("modulo_gestion")
-        #self.set_estado_actual("modulo_gestion auditor")
-        pass
+        self.interfaz.borrar_estado_anterior("gestion")
+        auditor_crud = AuditorCrud(self.ventana_principal, self.elementos, self.interfaz)
+        auditor_crud.mostrar_auditor_crud()
+

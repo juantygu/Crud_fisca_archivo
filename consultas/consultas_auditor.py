@@ -141,9 +141,9 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
                 self.connector.close_connection()
 
 
-consulta = ConsultasAuditor()
+#consulta = ConsultasAuditor()
 #auditor= consulta.obtener_auditor(id_auditor="A001",cedula=900085)
 #print(auditor[1])
-auditores = consulta.mostrar_auditores()
+#auditores = consulta.mostrar_auditores()
 #auditores = consulta.mostrar_nombre_auditores()
-print(auditores)
+#print(auditores)

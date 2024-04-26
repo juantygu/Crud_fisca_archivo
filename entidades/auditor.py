@@ -111,7 +111,7 @@ class Auditor: # logica relacionada con la tabla AUDITOR
                 # Cerrar la conexión
                 self.connector.close_connection()
 
-    def modificar_datos_auditor(self, id_auditor,nueva_cedula, nuevo_nombre_auditor):  # modificar nombre auditor
+    def modificar_datos_auditor(self, id_auditor, nueva_cedula, nuevo_nombre):  # modificar nombre auditor
         """
                 Modifica los datos de un auditor en la tabla AUDITOR.
 
@@ -136,7 +136,7 @@ class Auditor: # logica relacionada con la tabla AUDITOR
 
             # Consulta SQL para la modificación
             query = "UPDATE auditor SET  cedula =%s , nombre_auditor = %s WHERE id_auditor = %s"
-            values = (nueva_cedula,nuevo_nombre_auditor, id_auditor)
+            values = (nueva_cedula,nuevo_nombre, id_auditor)
             # Ejecutar la consulta
             self.connector.execute_query(query, values)
             # Confirmar los cambios
@@ -166,12 +166,12 @@ class Auditor: # logica relacionada con la tabla AUDITOR
                 # Cerrar la conexión
                 self.connector.close_connection()
 
-    def modificar_id_auditor(self,id_viejo_auditor, id_nuevo_auditor):
+    def modificar_id_auditor(self,id_antiguo_auditor, id_nuevo_auditor):
         """
                 Modifica el ID de un auditor en la tabla AUDITOR.
 
                 Parameters:
-                - id_viejo_auditor (int): El antiguo ID del auditor.
+                - id_antiguo_auditor (int): El antiguo ID del auditor.
                 - id_nuevo_auditor (int): El nuevo ID del auditor.
 
                 Returns:
@@ -182,7 +182,7 @@ class Auditor: # logica relacionada con la tabla AUDITOR
             self.connector = BDConnector()
 
             # Verificar si el auditor existe antes de intentar la modificación
-            mensaje_auditor, verificacion_auditor = self.verificar_auditor_existe(id_viejo_auditor, connection=self.connector)
+            mensaje_auditor, verificacion_auditor = self.verificar_auditor_existe(id_antiguo_auditor, connection=self.connector)
             if not verificacion_auditor:
                 # el auditor no existe
                 print(mensaje_auditor)
@@ -190,7 +190,7 @@ class Auditor: # logica relacionada con la tabla AUDITOR
 
             # Consulta SQL para la modificación
             query = "UPDATE auditor SET  id_auditor = %s  WHERE id_auditor = %s"
-            values = (id_nuevo_auditor, id_viejo_auditor)
+            values = (id_nuevo_auditor, id_antiguo_auditor)
             # Ejecutar la consulta
             self.connector.execute_query(query, values)
             # Confirmar los cambios
@@ -222,8 +222,6 @@ class Auditor: # logica relacionada con la tabla AUDITOR
             if self.connector:
                 # Cerrar la conexión
                 self.connector.close_connection()
-
-
 
     def verificar_auditor_existe(self,id_auditor, connection=None):
         """

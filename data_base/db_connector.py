@@ -21,7 +21,7 @@ class BDConnector:
         self.user = None
         self.password = None
         self.database = None
-        self.load_config()
+        self.load_config_bd()
         #self.connection = mysql.connector.connect(
             #host='localhost',
             #user='root',
@@ -38,7 +38,7 @@ class BDConnector:
         # Variable de instancia para realizar un seguimiento del estado de la transacción
         self.in_transaction = False
 
-    def load_config(self):
+    def load_config_bd(self):
         """
         Carga la configuración de la base de datos desde el archivo JSON.
         """
