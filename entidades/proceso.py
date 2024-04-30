@@ -318,7 +318,7 @@ class Proceso: # logica relacionada con la tabla PROCESOS
                 self.connector.close_connection()
 
 
-proceso = Proceso()
+#proceso = Proceso()
 #proceso.insertar_proceso("4","nuevo")
 #proceso.eliminar_proceso("4")
 #proceso.modificar_datos_proceso("5", "nuevoo")

@@ -3,15 +3,37 @@ from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter import ttk
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.proceso_crud import ProcesoCrud
 
 
 class Gestion:
     def __init__(self,ventana_principal, elementos, interfaz):
+        """
+                Inicializa la clase Gestion.
+
+                Parameters:
+                - ventana_principal (tk.Tk): La ventana principal de la aplicación.
+                - elementos (Elementos): Instancia de la clase Elementos.
+                - interfaz (Interfaz): Instancia de la clase Interfaz.
+
+                Returns:
+                - None
+                """
         self.ventana_principal = ventana_principal
         self.elementos = elementos
         self.interfaz = interfaz
 
     def mostrar_gestion(self):
+        """
+                Muestra la interfaz de gestión del archivo.
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
         # ====CALCULO POSICION BOTONES
         altura_pantalla = self.interfaz.window_height
         ancho_pantalla = self.interfaz.window_width
@@ -48,7 +70,7 @@ class Gestion:
                                                     font=("Arial", 20, "bold"),
                                                     fg="black", bg="white", bd=4, relief=tk.GROOVE, width=300,
                                                     height=150,
-                                                    command=self.on_boton_auditor)
+                                                    command=self.on_boton_contribuyente)
         self.elementos.boton_contribuyente.place(x=posicion_x1[1], y=posicion_y_fila1)
         self.elementos.imagen_contribuyente = PhotoImage(
             file="D:\pythonProject\Crud_fisca_archivo\imagenes\contrbuyente.png")
@@ -69,7 +91,7 @@ class Gestion:
         # =====BOTON PROCESO =======
         self.elementos.boton_proceso = tk.Button(self.ventana_principal, text="Proceso", font=("Arial", 20, "bold"),
                                                  fg="black", bg="white", bd=4, relief=tk.GROOVE, width=300, height=150,
-                                                 command=self.on_boton_auditor)
+                                                 command=self.on_boton_proceso)
         self.elementos.boton_proceso.place(x=posicion_x2[0], y=posicion_y_fila2)
         self.elementos.imagen_proceso = PhotoImage(file="D:\pythonProject\Crud_fisca_archivo\imagenes\proceso.png")
         self.elementos.imagen_proceso = self.elementos.imagen_proceso.subsample(
@@ -91,7 +113,47 @@ class Gestion:
         print(self.interfaz.estado_actual)
 
     def on_boton_auditor(self):
+        """
+                Maneja el evento de clic en el botón "Auditor".
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
         self.interfaz.borrar_estado_anterior("gestion")
         auditor_crud = AuditorCrud(self.ventana_principal, self.elementos, self.interfaz)
         auditor_crud.mostrar_auditor_crud()
+
+    def on_boton_contribuyente(self):
+        """
+                Maneja el evento de clic en el botón "Contribuyente".
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
+        self.interfaz.borrar_estado_anterior("gestion")
+        contribuyente_crud = ContribuyenteCrud(self.ventana_principal, self.elementos, self.interfaz)
+        contribuyente_crud.mostrar_contribuyente_crud()
+
+    def on_boton_proceso(self):
+        """
+                        Maneja el evento de clic en el botón "Contribuyente".
+
+                        Parameters:
+                        - None
+
+                        Returns:
+                        - None
+                        """
+        self.interfaz.borrar_estado_anterior("gestion")
+        proceso_crud = ProcesoCrud(self.ventana_principal, self.elementos, self.interfaz)
+        proceso_crud.mostrar_proceso_crud()
+
+
+
 

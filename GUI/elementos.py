@@ -60,10 +60,14 @@ class Elementos:
 
     def elementos_crud(self):
         # ETIQUETAS
+
         self.label_frame = None
         self.label_id = None
         self.label_cedula = None
         self.label_nombre = None
+        self.label_tipo = None
+
+
         self.label_antiguo_id = None
         self.label_nuevo_id = None
 
@@ -71,6 +75,8 @@ class Elementos:
         self.box_id = None
         self.box_cedula = None
         self.box_nombre = None
+        self.box_tipo = None
+
         self.box_antiguo_id = None
         self.box_nuevo_id = None
 
@@ -91,8 +97,10 @@ class Elementos:
         self.id_variable = tk.StringVar()
         self.cedula_variable = tk.StringVar()
         self.nombre_variable = tk.StringVar()
-        self.antiguo_id = tk.StringVar()
-        self.nuevo_id = tk.StringVar()
+        self.tipo_variable = tk.StringVar()
+
+        self.antiguo_id_variable = tk.StringVar()
+        self.nuevo_id_variable = tk.StringVar()
 
     def ventanas_emergentes(self):
         self.ventana_credenciales = None

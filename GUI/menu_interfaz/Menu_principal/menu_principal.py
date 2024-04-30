@@ -6,11 +6,31 @@ from GUI.menu_interfaz.Menu_principal.modulo_gestion.gestion import Gestion
 
 class MenuPrincipal():
     def __init__(self, ventana_principal, elementos, interfaz):
+        """
+                Inicializa la clase MenuPrincipal.
+
+                Parameters:
+                - ventana_principal (tk.Tk): La ventana principal de la aplicación.
+                - elementos (Elementos): Instancia de la clase Elementos.
+                - interfaz (Interfaz): Instancia de la clase Interfaz.
+
+                Returns:
+                - None
+                """
         self.ventana_principal = ventana_principal
         self.elementos = elementos
         self.interfaz = interfaz # instancia de la clase menu
 
     def mostrar_menu_principal(self):
+        """
+                Muestra el menú principal de la aplicación.
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
         altura_pantalla = self.interfaz.window_height
         ancho_pantalla = self.interfaz.window_width
         posicion_x = self.interfaz.calcular_posiciones_horizontal_botones(3, 300, ancho_pantalla)
@@ -53,11 +73,29 @@ class MenuPrincipal():
         print(self.interfaz.estado_actual)
 
     def on_boton_consultar(self):
+        """
+                Maneja el evento de clic en el botón "Consultar".
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
         self.interfaz.borrar_estado_anterior("menu principal")
         consultar = Consultar(self.ventana_principal, self.elementos, self.interfaz)
         consultar.mostrar_consultar()
 
     def on_boton_gestion(self):
+        """
+                Maneja el evento de clic en el botón "Gestión".
+
+                Parameters:
+                - None
+
+                Returns:
+                - None
+                """
         self.interfaz.borrar_estado_anterior("menu principal")
         gestion = Gestion(self.ventana_principal, self.elementos, self.interfaz)
         gestion.mostrar_gestion()

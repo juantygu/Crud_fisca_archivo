@@ -8,6 +8,8 @@ from GUI.elementos import Elementos
 from GUI.menu_interfaz.Menu_principal.menu_principal import MenuPrincipal
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.gestion import Gestion
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.proceso_crud import ProcesoCrud
 
 
 class Interfaz():
@@ -52,6 +54,12 @@ class Interfaz():
             print(f"Error: La clave {e} no está presente en el archivo de configuración.")
 
     def crear_ventana_inicio(self, ventana_inicio):
+        """
+        Crea y configura la ventana de inicio de sesión.
+        Parameters:
+        - ventana_inicio (tk.Tk): La ventana de inicio de sesión.
+
+                """
         self.estado_actual = "inicio"
         print(self.estado_actual)
         usuario_por_defecto = "ARCHIVO"
@@ -88,6 +96,9 @@ class Interfaz():
         login_button.pack()
 
     def crear_ventana_principal(self):
+        """
+                Crea y configura la ventana principal de la aplicación.
+        """
         # ==========================================VENTANA===========================================================
         self.ventana_principal = tk.Tk()
         self.ventana_principal.title("ARCHIVO DE FISCALIZACIÓN")
@@ -115,8 +126,12 @@ class Interfaz():
         self.ventana_principal.mainloop()  # asigno el nuevo mainloo() que sera el hilo principal de la interfaz
 
     def verificar_credenciales(self,estado_actual):
-        #print(estado_actual)
+        """
+                Verifica las credenciales de inicio de sesión.
 
+                Parameters:
+                - estado_actual (str): El estado actual de la interfaz.
+        """
         # Obtiene el usuario y la contraseña ingresados por el usuario
         if estado_actual == "inicio":
             usuario = self.elementos.entry_user.get()
@@ -144,8 +159,39 @@ class Interfaz():
                 messagebox.showerror("Error", "Usuario o contraseña incorrectos")
                 self.elementos.ventana_credenciales.focus_force()
 
-    def atras(self): # CONDICIONES SI SE OPRIME EL BOTON REGRESAR
+        if estado_actual == "gestion_contribuyente_crud":
+            usuario_admin = self.elementos.entry_user_admin.get()
+            contrasena_admin = self.elementos.entry_password_admin.get()
 
+            if usuario_admin == self.user_admin and contrasena_admin == self.password_admin:
+                # Si las credenciales son correctas,
+                self.elementos.ventana_credenciales.destroy()
+                contribuyente_crud = ContribuyenteCrud(self.ventana_principal, self.elementos, self)
+                contribuyente_crud.cambiar_id_contribuyente()
+            else:
+                # Si las credenciales son incorrectas, muestra un mensaje de error
+                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+                self.elementos.ventana_credenciales.focus_force()
+
+        if estado_actual == "gestion_proceso_crud":
+            usuario_admin = self.elementos.entry_user_admin.get()
+            contrasena_admin = self.elementos.entry_password_admin.get()
+
+            if usuario_admin == self.user_admin and contrasena_admin == self.password_admin:
+                # Si las credenciales son correctas,
+                self.elementos.ventana_credenciales.destroy()
+                proceso_crud = ProcesoCrud(self.ventana_principal, self.elementos, self)
+                proceso_crud.cambiar_id_proceso()
+            else:
+                # Si las credenciales son incorrectas, muestra un mensaje de error
+                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+                self.elementos.ventana_credenciales.focus_force()
+
+
+    def atras(self): # CONDICIONES SI SE OPRIME EL BOTON REGRESAR
+        """
+                Maneja el evento de retroceso en la interfaz.
+        """
         # =======ESTADOS MENU PRINCIPAL===========
         if self.estado_actual == "consulta": # si esta en el estado consulta
             self.borrar_estado_anterior("consulta") # borra el estado consulta
@@ -182,8 +228,37 @@ class Interfaz():
             #auditor_crud = AuditorCrud(self.ventana_principal, self.elementos, self)
             #auditor_crud.mostrar_auditor_crud()
 
-    def borrar_estado_anterior(self,estado_anterior): # borra los elementos del estado en el estaba antes de dar click
+        # ======== CONTRIBUYENTE CRUD ==========
+        if self.estado_actual == "gestion_contribuyente_crud":
+            self.borrar_estado_anterior("gestion_contribuyente_crud")
 
+            # Crear intancia de gestion y mostrar gestion
+            gestion = Gestion(self.ventana_principal, self.elementos, self)
+            gestion.mostrar_gestion()
+
+        # ======== CONTRIBUYENTE CRUD (cambiar id contribuyente) ==========
+        if self.estado_actual == "g_c_c_cambiar_id_contribuyente":
+            self.borrar_estado_anterior("g_c_c_cambiar_id_contribuyente")
+
+        # ========= PROCESO CRUD ============
+        if self.estado_actual == "gestion_proceso_crud":
+            self.borrar_estado_anterior("gestion_proceso_crud")
+
+            # Crear intancia de gestion y mostrar gestion
+            gestion = Gestion(self.ventana_principal, self.elementos, self)
+            gestion.mostrar_gestion()
+
+        # ======== PROCESO CRUD (cambiar id PROCESO) =====================
+        if self.estado_actual == "g_p_c_cambiar_id_proceso":
+            self.borrar_estado_anterior("g_p_c_cambiar_id_proceso")
+
+    def borrar_estado_anterior(self,estado_anterior): # borra los elementos del estado en el estaba antes de dar click
+        """
+                    Borra los elementos del estado anterior en la interfaz.
+
+                    Parameters:
+                    - estado_anterior (str): El estado anterior de la interfaz.
+            """
         if estado_anterior == "menu principal":
             self.elementos.label_titulo.destroy()
             self.elementos.boton_consultar.destroy()
@@ -206,14 +281,15 @@ class Interfaz():
             self.elementos.label_frame.destroy()
             self.elementos.label_id.destroy()
             self.elementos.label_nombre.destroy()
+            self.elementos.label_cedula.destroy()
             self.elementos.box_id.destroy()
             self.elementos.box_nombre.destroy()
+            self.elementos.box_cedula.destroy()
             self.elementos.boton_insertar.destroy()
             self.elementos.boton_modificar.destroy()
             self.elementos.boton_eliminar.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
-
         if estado_anterior == "g_a_c_cambiar_id_auditor": # gestion_auditor_crud
             self.elementos.label_titulo.destroy()
             self.elementos.label_antiguo_id.destroy()
@@ -222,7 +298,6 @@ class Interfaz():
             self.elementos.box_nuevo_id.destroy()
             self.elementos.boton_aceptar.destroy()
             self.elementos.boton_cancelar.destroy()
-
 
             # habilitar botones y cajas
             self.elementos.boton_insertar.config(state=tk.NORMAL)
@@ -238,18 +313,103 @@ class Interfaz():
             self.estado_actual = "gestion_auditor_crud"
             self.elementos.ventana_credenciales_abierta = False
             print(self.estado_actual)
+        if estado_anterior == "gestion_contribuyente_crud":
+            self.elementos.label_titulo.destroy()
+            self.elementos.boton_atras.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.label_id.destroy()
+            self.elementos.label_nombre.destroy()
+            self.elementos.label_tipo.destroy()
+            self.elementos.box_id.destroy()
+            self.elementos.box_nombre.destroy()
+            self.elementos.box_tipo.destroy()
+            self.elementos.boton_insertar.destroy()
+            self.elementos.boton_modificar.destroy()
+            self.elementos.boton_eliminar.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.boton_cambiar_id.destroy()
+        if estado_anterior == "g_c_c_cambiar_id_contribuyente": # gestion_contribuyente_crud
 
+            self.elementos.label_titulo.destroy()
+            self.elementos.label_antiguo_id.destroy()
+            self.elementos.label_nuevo_id.destroy()
+            self.elementos.box_antiguo_id.destroy()
+            self.elementos.box_nuevo_id.destroy()
+            self.elementos.boton_aceptar.destroy()
+            self.elementos.boton_cancelar.destroy()
+
+            # habilitar botones y cajas
+            self.elementos.boton_insertar.config(state=tk.NORMAL)
+            self.elementos.boton_eliminar.config(state=tk.NORMAL)
+            self.elementos.boton_modificar.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+            self.elementos.boton_atras.config(state=tk.NORMAL)
+
+            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_tipo.config(state=tk.NORMAL)
+            self.elementos.box_nombre.config(state=tk.NORMAL)
+
+            self.estado_actual = "gestion_contribuyente_crud"
+            self.elementos.ventana_credenciales_abierta = False
+            print(self.estado_actual)
+        if estado_anterior == "gestion_proceso_crud":
+            self.elementos.label_titulo.destroy()
+            self.elementos.boton_atras.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.label_id.destroy()
+            self.elementos.label_tipo.destroy()
+            self.elementos.box_id.destroy()
+            self.elementos.box_tipo.destroy()
+            self.elementos.boton_insertar.destroy()
+            self.elementos.boton_modificar.destroy()
+            self.elementos.boton_eliminar.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.boton_cambiar_id.destroy()
+        if estado_anterior == "g_p_c_cambiar_id_proceso":
+            self.elementos.label_titulo.destroy()
+            self.elementos.label_antiguo_id.destroy()
+            self.elementos.label_nuevo_id.destroy()
+            self.elementos.box_antiguo_id.destroy()
+            self.elementos.box_nuevo_id.destroy()
+            self.elementos.boton_aceptar.destroy()
+            self.elementos.boton_cancelar.destroy()
+
+            # habilitar botones y cajas
+            self.elementos.boton_insertar.config(state=tk.NORMAL)
+            self.elementos.boton_eliminar.config(state=tk.NORMAL)
+            self.elementos.boton_modificar.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+            self.elementos.boton_atras.config(state=tk.NORMAL)
+
+            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_tipo.config(state=tk.NORMAL)
+
+            self.estado_actual = "gestion_proceso_crud"
+            self.elementos.ventana_credenciales_abierta = False
+            print(self.estado_actual)
 
 
 
     # ============== FUNCIONES CRUD AUDITOR =====================
-
-#====== BOTON ATRAS =================
+    #====== BOTON ATRAS =================
     def on_boton_atras(self):
+        """
+                Maneja el evento del botón de retroceso.
+        """
         self.atras()
 
-
     def calcular_posiciones_horizontal_botones(self, cantidad_botones, ancho_boton, ancho_pantalla):
+        """
+                Calcula las posiciones horizontales de los botones en la interfaz.
+
+                Parameters:
+                - cantidad_botones (int): La cantidad de botones.
+                - ancho_boton (int): El ancho de cada botón.
+                - ancho_pantalla (int): El ancho de la pantalla.
+
+                Returns:
+                - list: Una lista de posiciones horizontales de los botones.
+        """
         # Calcular el espacio total ocupado por los botones y los espacios entre ellos
         ancho_total_botones = cantidad_botones * ancho_boton
         espacio_entre_botones = (ancho_pantalla - ancho_total_botones) // (cantidad_botones + 1)

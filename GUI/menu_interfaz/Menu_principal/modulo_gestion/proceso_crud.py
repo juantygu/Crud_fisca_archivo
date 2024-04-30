@@ -3,14 +3,15 @@ import json
 from tkinter import messagebox
 from tkinter import PhotoImage
 from tkinter import ttk
-from consultas.consultas_auditor import ConsultasAuditor
-from entidades.auditor import Auditor
+from consultas.consultas_proceso import ConsultasProceso
+from entidades.proceso import Proceso
 
 
-class AuditorCrud:
-    def __init__(self,ventana_principal, elementos, interfaz):
+class ProcesoCrud:
+
+    def __init__(self, ventana_principal, elementos, interfaz):
         """
-                Constructor de la clase AuditorCrud.
+                Constructor de la clase ProcesoCrud .
 
                 Args:
                     ventana_principal: La ventana principal de la interfaz gráfica.
@@ -20,83 +21,72 @@ class AuditorCrud:
         self.ventana_principal = ventana_principal
         self.elementos = elementos
         self.interfaz = interfaz
-        self.consultas_auditor = ConsultasAuditor()
-        self.auditor = Auditor()
+        self.consultas_proceso = ConsultasProceso()
+        self.proceso = Proceso()
         self.elementos.ventana_credenciales_abierta = False
 
-    def mostrar_auditor_crud(self):
+    def mostrar_proceso_crud(self):
         """
-                Método para mostrar la interfaz de gestión de auditores.
+                Método para mostrar la interfaz de gestión de proceso.
                 """
-        self.interfaz.estado_actual = "gestion_auditor_crud"
+        self.interfaz.estado_actual = "gestion_proceso_crud"
         print(self.interfaz.estado_actual)
+        opciones_tipo = ["Omisos", "Inexactos","sancionatorio","Omisos_R","Omisos_AR"]
+
         try:
             altura_pantalla = self.interfaz.window_height
             ancho_pantalla = self.interfaz.window_width
 
             # ==== TITULO ======
-            self.elementos.label_titulo = tk.Label(self.ventana_principal, text="GESTIÓN DE AUDITORES",
+            self.elementos.label_titulo = tk.Label(self.ventana_principal, text="GESTIÓN DE PROCESOS",
                                                    font=("Arial", 30, "bold"), fg="black", bg="#E6F7FF")
 
             self.elementos.label_titulo.pack(pady=20)  # pady añade un espacio en la parte inferior de la etiqueta
             # ====LABEL IFRAME====
-            self.elementos.label_frame = tk.LabelFrame(self.ventana_principal, text="DATOS DEL AUDITOR",
+            self.elementos.label_frame = tk.LabelFrame(self.ventana_principal, text="DATOS DEL PROCESO",
                                                        font=("Arial", 20, "bold"), fg="black", bg="#E6F7FF", bd=5,
                                                        relief=tk.RIDGE)
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
-            # =====ETIQUETA ID_Auditor ======
-            self.elementos.label_id = tk.Label(self.elementos.label_frame, text="ID_auditor", font=("Arial", 14, "bold"),
+            # =====ETIQUETA ID_Contribuyente ======
+            self.elementos.label_id = tk.Label(self.elementos.label_frame, text="ID_proceso", font=("Arial", 14, "bold"),
                                                fg="black", bg="#E6F7FF")
             self.elementos.label_id.place(x=45, y=30)
 
-            # =====CAJA ID_Auditor =========
+            # =====CAJA ID_Contribuyente =========
             self.elementos.box_id = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable, bd=3,
                                              font=("Arial", 12), width=15, insertbackground="blue", selectbackground="blue",
                                              relief=tk.RIDGE)
             self.elementos.box_id.place(x=145, y=30)
             self.elementos.box_id.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
-            # ==== ETIQUETA CEDULA ====
-            self.elementos.label_cedula = tk.Label(self.elementos.label_frame, text="Cedula", font=("Arial", 14, "bold"),
+            # ==== ETIQUETA nombre_proceso ====
+            self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 14, "bold"),
                                                    fg="black", bg="#E6F7FF")
-            self.elementos.label_cedula.place(x=45, y=60)
+            self.elementos.label_tipo.place(x=45, y=60)
 
-            # ===== CAJA CEDULA ====
-            self.elementos.box_cedula = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.cedula_variable, bd=3,
-                                                 font=("Arial", 12), width=15, insertbackground="blue",
-                                                 selectbackground="blue",
-                                                 relief=tk.RIDGE)
-            self.elementos.box_cedula.place(x=145, y=60)
-            self.elementos.box_cedula.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
-            # ===== ETIQUETA NOMBRE ======
-            self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 15, "bold"),
-                                                   fg="black", bg="#E6F7FF")
-            self.elementos.label_nombre.place(x=45, y=90)
+            self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
+                                                   textvariable=self.elementos.tipo_variable, font=("Arial", 12),
+                                                   width=15)
+            self.elementos.box_tipo.place(x=145, y=60)
 
-            # ====== CAJA NOMBRE ======
-            self.elementos.box_nombre = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.nombre_variable,
-                                                 bd=3, font=("Arial", 12), width=35, insertbackground="blue",
-                                                 selectbackground="blue", relief=tk.RIDGE)
-            self.elementos.box_nombre.place(x=145, y=90)
-            self.elementos.box_nombre.delete(0,tk.END)  # Borra el contenido actual de la caja de texto self.elementos.box_nombre
-            # ====== BOTON GUARDAR =====
+            # ====== BOTON INSERTAR =====
             self.elementos.boton_insertar = tk.Button(self.elementos.label_frame, text="Insertar", font=("Arial", 12, "bold"),
                                                      fg="black", bg="white", bd=4, relief=tk.GROOVE, width=7, height=1,
-                                                     activebackground='blue', command=self.insertar_auditor)
+                                                     activebackground='blue', command=self.insertar_proceso)
             self.elementos.boton_insertar.place(x=50, y=170)
             # ===== BOTON MODIFICAR ====
             self.elementos.boton_modificar = tk.Button(self.elementos.label_frame, text="Modificar",
                                                        font=("Arial", 12, "bold"), fg="black", bg="white", bd=4,
                                                        relief=tk.GROOVE, width=7, height=1, activebackground='blue',
-                                                       command=self.modificar_auditor)
+                                                       command=self.modificar_proceso)
             self.elementos.boton_modificar.place(x=150, y=170)
             # ===== BOTON ELIMINAR =====
             self.elementos.boton_eliminar = tk.Button(self.elementos.label_frame, text="Eliminar",
                                                       font=("Arial", 12, "bold"), fg="black", bg="white", bd=4,
                                                       relief=tk.GROOVE, width=7, height=1, activebackground='blue',
-                                                      command=self.eliminar_auditor)
+                                                      command=self.eliminar_proceso)
             self.elementos.boton_eliminar.place(x=250, y=170)
 
             # ====BOTON LIMPIAR CAJA ========
@@ -111,7 +101,7 @@ class AuditorCrud:
             self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_auditor",
                                                       font=("Arial", 12, "bold"), fg="black", bg="red", bd=4,
                                                       relief=tk.GROOVE, width=15, height=1, activebackground='blue',
-                                                      command=self.crear_ventana_credenciales_cambiar_id_auditor)
+                                                      command=self.crear_ventana_credenciales_cambiar_id_proceso)
             self.elementos.boton_cambiar_id.place(x=55,y=450)
 
             # ===== TABLA ======
@@ -122,20 +112,17 @@ class AuditorCrud:
             style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
             style.configure('Treeview', font=('Arial', 12))
 
-            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_AUDITOR', 'CEDULA', 'NOMBRE'), show='headings',height=15)
-            self.elementos.tree.heading('ID_AUDITOR', text='ID_AUDITOR')
-            self.elementos.tree.column('ID_AUDITOR', width=110, anchor='center')
-            self.elementos.tree.heading('CEDULA', text='CEDULA')
-            self.elementos.tree.column('CEDULA', width=100, anchor='center')
-            self.elementos.tree.heading('NOMBRE', text='NOMBRE')
-            self.elementos.tree.column('NOMBRE', width=300, anchor='center')
+            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_PROCESO', 'NOMBRE_PROCESO'), show='headings',height=20)
+            self.elementos.tree.heading('ID_PROCESO', text='ID_PROCESO')
+            self.elementos.tree.column('ID_PROCESO', width=110, anchor='center')
+            self.elementos.tree.heading('NOMBRE_PROCESO', text='NOMBRE_PROCESO')
+            self.elementos.tree.column('NOMBRE_PROCESO', width=430, anchor='center')
 
-            self.elementos.tree.place(x=ancho_pantalla/2, y=110)
+            self.elementos.tree.place(x=((ancho_pantalla/2)-30), y=110)
             #  =======MOSTRAR DATOS  ===========
-            self.actualizar_tree_auditor()
+            self.actualizar_tree_proceso()
             # Enlace del evento para seleccionar registros
-            #self.elementos.tree.bind("<ButtonRelease-1>", self.selecionar_registro_auditor)
-            self.elementos.tree.bind("<<TreeviewSelect>>", self.selecionar_registro_auditor)
+            self.elementos.tree.bind("<<TreeviewSelect>>", self.selecionar_registro_proceso)
 
             # Boton atras
             self.elementos.boton_atras = tk.Button(self.ventana_principal, text="ATRAS", font=("Arial", 12, "bold"),
@@ -146,30 +133,30 @@ class AuditorCrud:
             # Si ocurre algún error, imprime un mensaje de error
             print("Error al mostrar gestion auditor:", str(e))
 
-    def actualizar_tree_auditor(self):
+    def actualizar_tree_proceso(self):
         """
-                Método para actualizar la tabla de auditores en la interfaz gráfica.
+                Método para actualizar la tabla de procesos en la interfaz gráfica.
                 """
         try:
-            #borrar elementos actuales del tree auditor
+            #borrar elementos actuales del tree contribuyente
             # devuelve una lista de identificadores de elementos secundarios
             # , y el operador * se utiliza para pasar esos identificadores
             # como argumentos separados a la función delete.
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            auditores = self.consultas_auditor.mostrar_auditores()
-            #print(auditores)
+            procesos = self.consultas_proceso.mostrar_procesos()
+            #print(contribuyentes)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in auditores[1]:
+            for row in procesos[1]:
                 self.elementos.tree.insert("", "end", values=row)
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 
-    def selecionar_registro_auditor(self, event):
+    def selecionar_registro_proceso(self, event):
         """
-                Método para seleccionar un registro de la tabla de auditores.
+                Método para seleccionar un registro de la tabla de procesos.
 
                 Args:
                     event: Evento que activa la selección de un registro.
@@ -182,15 +169,11 @@ class AuditorCrud:
                 #establecer los valores en los widgests entry
                 self.elementos.box_id.delete(0, tk.END)
                 self.elementos.box_id.insert(0, values[0])
-                self.elementos.box_cedula.delete(0, tk.END)
-                self.elementos.box_cedula.insert(0, values[1])
-                self.elementos.box_nombre.delete(0, tk.END)
-                self.elementos.box_nombre.insert(0, values[2])
+                self.elementos.box_tipo.set(values[1])
 
                 # Deshabilitar el botón "Insertar" y self.elementos.box_id
                 self.elementos.boton_insertar.config(state=tk.DISABLED)
                 self.elementos.box_id.config(state=tk.DISABLED)
-
 
         except ValueError as error:
             print(f"fError al seleccionar registro : {error}")
@@ -207,44 +190,42 @@ class AuditorCrud:
             self.elementos.box_id.config(state=tk.NORMAL)
 
         self.elementos.box_id.delete(0, tk.END)
-        self.elementos.box_cedula.delete(0, tk.END)
-        self.elementos.box_nombre.delete(0, tk.END)
+        self.elementos.box_tipo.delete(0, tk.END)
 
-    def insertar_auditor(self):
+    def insertar_proceso(self):
         """
-                Método para insertar un nuevo auditor en la base de datos.
+                Método para insertar un nuevo proceso en la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
-        cedula_auditor = self.elementos.box_cedula.get().strip()
-        nombre_auditor = self.elementos.box_nombre.get().strip()
-        # Verificar si ambas cajas de texto tienen un valor
-        if id_auditor and cedula_auditor and nombre_auditor:
+        id_proceso = self.elementos.box_id.get().strip()
+        nombre_proceso = self.elementos.box_tipo.get().strip()
+
+        if id_proceso and nombre_proceso:
             try:
                 # Convertir id_auditor a cadena y verificar que contenga solo números
-                if id_auditor[0] != "A":
-                    raise ValueError("ID del auditor debe comenzar con A .")
-                elif not str(cedula_auditor).isdigit():
-                    raise ValueError("la cedula del auditor debe contener solo números.")
+                if id_proceso[0] not in "0123456789":
+                    raise ValueError("ID del contribuyente debe comenzar con un numero.")
+                elif nombre_proceso not in ["Omisos", "Inexactos","sancionatorio","Omisos_R","Omisos_AR"]:
+                    raise ValueError("El tipo de contribuyente debe ser uno de la lista'.")
 
-                mensaje, confirmacion = self.auditor.insertar_auditor(id_auditor, cedula_auditor, nombre_auditor)
+                mensaje, confirmacion = self.proceso.insertar_proceso(id_proceso, nombre_proceso)
 
                 if confirmacion:
-                    messagebox.showinfo("INFORMACIÓN", "El Auditor fue agregado correctamente")
+                    messagebox.showinfo("INFORMACIÓN", "El Proceso fue agregado correctamente")
                     print(mensaje)
                 else:
                     messagebox.showinfo("INFORMACIÓN", mensaje)
                     print(mensaje)
 
                 # actualizamos los campos del tree
-                self.actualizar_tree_auditor()
+                self.actualizar_tree_proceso()
                 # LIMPIAR CAMPOS
                 self.limpiar_cajas_texto()
 
             except ValueError as error:
                 # Verificar si el error es debido a un no dígito en id_auditor
-                if "la cedula del auditor debe contener solo números" in str(error):
+                if "ID del proceso debe comenzar con un numero." in str(error):
 
-                    messagebox.showerror("Error", "la cedula del auditor debe contener solo números.")
+                    messagebox.showerror("Error", "ID del proceso debe comenzar con un numero.")
                     # Borrar el contenido de la caja de texto id_auditor
 
                 # Verificar si el error es debido a la conexión a la base de datos
@@ -255,19 +236,18 @@ class AuditorCrud:
         else:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
-    def eliminar_auditor(self):
+    def eliminar_proceso(self):
         """
-                Método para eliminar un auditor de la base de datos.
+                Método para eliminar un proceso de la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
-
+        id_proceso = self.elementos.box_id.get().strip()
         # Verificar si ambas cajas de texto tienen un valor
-        if id_auditor:
+        if id_proceso:
             try:
-                if id_auditor[0] != "A":
-                    raise ValueError("ID del auditor debe comenzar con A.")
+                if id_proceso[0] not in "0123456789":
+                    raise ValueError("ID del proceso debe comenzar con un numero.")
 
-                mensaje , confirmacion = self.auditor.eliminar_auditor(id_auditor)
+                mensaje, confirmacion = self.proceso.eliminar_proceso(id_proceso)
 
                 if confirmacion:
                     messagebox.showinfo("INFORMACIÓN", "los datos fueron Elimninados")
@@ -277,14 +257,14 @@ class AuditorCrud:
                     print(mensaje)
 
                 # actualizamos los campos del tree
-                self.actualizar_tree_auditor()
+                self.actualizar_tree_proceso()
                 # LIMPIAR CAMPOS
                 self.limpiar_cajas_texto()
             except ValueError as error:
                 # Verificar si el error es debido a un no dígito en id_auditor
-                if "ID del auditor debe comenzar con A" in str(error):
+                if "ID del proceso debe comenzar con un numero" in str(error):
 
-                    messagebox.showerror("Error", "ID del auditor debe comenzar con A")
+                    messagebox.showerror("Error", "ID del proceso debe comenzar con un numero")
                     # Borrar el contenido de la caja de texto id_auditor
 
                 # Verificar si el error es debido a la conexión a la base de datos
@@ -293,44 +273,42 @@ class AuditorCrud:
                 else:
                     messagebox.showerror("Error", str(error))
         else:
-            messagebox.showerror("Error", "la caja de texto id_auditor debe tener un valor.")
+            messagebox.showerror("Error", "la caja de texto id_proceso debe tener un valor.")
 
-    def modificar_auditor(self):
+    def modificar_proceso(self):
         """
-                Método para eliminar un auditor de la base de datos.
+                Método para modificar los datos de un proceso en la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
-        nueva_cedula_auditor = self.elementos.box_cedula.get().strip()
-        nuevo_nombre_auditor = self.elementos.box_nombre.get().strip()
+        id_proceso = self.elementos.box_id.get().strip()
+        nuevo_nombre_proceso = self.elementos.box_tipo.get().strip()
 
-        # Verificar si ambas cajas de texto tienen un valor
-        if id_auditor and nueva_cedula_auditor and nuevo_nombre_auditor:
+        if id_proceso and nuevo_nombre_proceso:
             try:
                 # Convertir id_auditor a cadena y verificar que contenga solo números
-                if id_auditor[0] != "A":
-                    raise ValueError("ID del auditor debe comenzar con A .")
-                if not str(nueva_cedula_auditor).isdigit():
-                    raise ValueError("la cedula del auditor debe contener solo números.")
+                if id_proceso[0] not in "0123456789":
+                    raise ValueError("ID del contribuyente debe comenzar con un numero.")
+                elif nuevo_nombre_proceso not in ["Omisos", "Inexactos","sancionatorio","Omisos_R","Omisos_AR"]:
+                    raise ValueError("El tipo de contribuyente debe ser uno de la lista'.")
 
-                mensaje, confirmacion = self.auditor.modificar_datos_auditor(id_auditor, nueva_cedula_auditor, nuevo_nombre_auditor)
+                mensaje, confirmacion = self.proceso.modificar_datos_proceso(id_proceso, nuevo_nombre_proceso)
 
                 if confirmacion:
-                    messagebox.showinfo("INFORMACIÓN", "los datos fueron Actualizados")
+                    messagebox.showinfo("INFORMACIÓN", "El Proceso fue modificado correctamente")
                     print(mensaje)
                 else:
                     messagebox.showinfo("INFORMACIÓN", mensaje)
                     print(mensaje)
 
                 # actualizamos los campos del tree
-                self.actualizar_tree_auditor()
+                self.actualizar_tree_proceso()
                 # LIMPIAR CAMPOS
                 self.limpiar_cajas_texto()
 
             except ValueError as error:
                 # Verificar si el error es debido a un no dígito en id_auditor
-                if "la cedula del auditor debe contener solo números" in str(error):
+                if "ID del proceso debe comenzar con un numero." in str(error):
 
-                    messagebox.showerror("Error", "la cedula del auditor debe contener solo números.")
+                    messagebox.showerror("Error", "ID del proceso debe comenzar con un numero.")
                     # Borrar el contenido de la caja de texto id_auditor
 
                 # Verificar si el error es debido a la conexión a la base de datos
@@ -341,9 +319,9 @@ class AuditorCrud:
         else:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
-    def modificar_id_auditor(self):
+    def modificar_id_proceso(self):
         """
-                Método para modificar el ID de un auditor en la base de datos.
+                Método para modificar el ID de un proceso en la base de datos.
                 """
         id_antiguo = self.elementos.box_antiguo_id.get().strip()
         id_nuevo = self.elementos.box_nuevo_id.get().strip()
@@ -351,11 +329,11 @@ class AuditorCrud:
         # Verificar si ambas cajas de texto tienen un valor
         if id_antiguo and id_nuevo:
             try:
-                if id_antiguo[0] != "A":
-                    raise ValueError("El antiguo ID debe comenzar con A.")
-                if id_nuevo[0] != "A":
-                    raise ValueError("El nuevo ID debe comenzar con A.")
-                mensaje, confirmacion = self.auditor.modificar_id_auditor(id_antiguo,id_nuevo)
+                if id_antiguo[0] not in "0123456789":
+                    raise ValueError("ID antiguo debe comenzar con un numero.")
+                if id_nuevo[0] not in "0123456789":
+                    raise ValueError("ID nuevo debe comenzar con un numero.")
+                mensaje, confirmacion = self.proceso.modificar_id_proceso(id_antiguo, id_nuevo)
 
                 if confirmacion:
                     messagebox.showinfo("INFORMACIÓN", "los datos fueron Actualizados")
@@ -365,19 +343,19 @@ class AuditorCrud:
                     print(mensaje)
 
                 # actualizamos los campos del tree
-                self.actualizar_tree_auditor()
+                self.actualizar_tree_proceso()
                 # LIMPIAR CAMPOS
                 self.limpiar_cajas_texto()
 
             except ValueError as error:
                 # Verificar si el error es debido a un no dígito en id_auditor
-                if "El antiguo ID debe comenzar con A" in str(error):
+                if " EL ID antiguo debe comenzar con un numero" in str(error):
 
-                    messagebox.showerror("Error", "El antiguo ID debe comenzar con A.")
+                    messagebox.showerror("Error", "EL ID antiguo debe comenzar con un numero.")
                     # Borrar el contenido de la caja de texto id_auditor
-                elif"El nuevo ID debe comenzar con A" in str(error):
+                elif"ID nuevo debe comenzar con un numero" in str(error):
 
-                    messagebox.showerror("Error", "El nuevo ID debe comenzar con A.")
+                    messagebox.showerror("Error", "ID nuevo debe comenzar con un numero.")
                     # Borrar el contenido de la caja de texto id_auditor
                 # Verificar si el error es debido a la conexión a la base de datos
                 elif "Error al conectar a la base de datos" in str(error):
@@ -387,11 +365,11 @@ class AuditorCrud:
         else:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
-    def cambiar_id_auditor(self):
+    def cambiar_id_proceso(self):
         """
-                Método que muestra los elementos para cambiar el id auditor .
+                Método para cambiar el ID de un proceso en la interfaz gráfica.
                 """
-        self.interfaz.estado_actual = "g_a_c_cambiar_id_auditor" # gestion_auditor_crud
+        self.interfaz.estado_actual = "g_p_c_cambiar_id_proceso" # gestion_proceso_crud
         print(self.interfaz.estado_actual)
 
         # desabilitar botones y cajas
@@ -402,8 +380,7 @@ class AuditorCrud:
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
         self.elementos.box_id.config(state=tk.DISABLED)
-        self.elementos.box_cedula.config(state=tk.DISABLED)
-        self.elementos.box_nombre.config(state=tk.DISABLED)
+        self.elementos.box_tipo.config(state=tk.DISABLED)
 
         # ===== ETIQUETA ANTIGUO_ID =======
         self.elementos.label_antiguo_id = tk.Label(self.ventana_principal, text="ID_antiguo", font=("Arial", 12, "bold"),
@@ -431,7 +408,7 @@ class AuditorCrud:
         # ===== BOTON ACEPTAR ======
         self.elementos.boton_aceptar = tk.Button(self.ventana_principal, text="ACEPTAR", font=("Arial", 12, "bold"),
                                                fg="black", bg="white", bd=4, relief=tk.GROOVE, width=9, height=1,
-                                               command= self.modificar_id_auditor)
+                                               command= self.modificar_id_proceso)
         self.elementos.boton_aceptar.place(x=55, y=580)
 
         # ====== BOTON CANCELAR =======
@@ -440,9 +417,9 @@ class AuditorCrud:
                                                  command=self.interfaz.atras)
         self.elementos.boton_cancelar.place(x=170, y=580)
 
-    def crear_ventana_credenciales_cambiar_id_auditor(self):
+    def crear_ventana_credenciales_cambiar_id_proceso(self):
         """
-                Método para crear la ventana de credenciales para cambiar el ID del auditor.
+                Método para crear la ventana de credenciales para cambiar el ID del proceso.
                 """
         if not self.elementos.ventana_credenciales_abierta or not self.elementos.ventana_credenciales.winfo_exists():
 
@@ -454,8 +431,7 @@ class AuditorCrud:
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
             self.elementos.box_id.config(state=tk.DISABLED)
-            self.elementos.box_cedula.config(state=tk.DISABLED)
-            self.elementos.box_nombre.config(state=tk.DISABLED)
+            self.elementos.box_tipo.config(state=tk.DISABLED)
 
             self.elementos.ventana_credenciales = tk.Tk()
             self.elementos.ventana_credenciales.title("Acceso administrador")
@@ -485,21 +461,21 @@ class AuditorCrud:
             contraseña_var = tk.StringVar(value=self.interfaz.password_admin)
 
             self.elementos.entry_password_admin = tk.Entry(self.elementos.ventana_credenciales, show="*",
-                                                     textvariable=contraseña_var)  # Muestra asteriscos para la contraseña
+                                                     textvariable=contraseña_var) # Muestra asteriscos para la contraseña
             self.elementos.entry_password_admin.pack()
 
             # Crea un botón para iniciar sesión
-            login_button = tk.Button(self.elementos.ventana_credenciales, text="Iniciar Sesión", command=lambda: self.interfaz.verificar_credenciales("gestion_auditor_crud"))
+            login_button = tk.Button(self.elementos.ventana_credenciales, text="Iniciar Sesión", command=lambda: self.interfaz.verificar_credenciales("gestion_proceso_crud"))
             login_button.pack()
             # Después de crear la ventana, establece la bandera a True
             self.elementos.ventana_credenciales_abierta = True
-            self.elementos.ventana_credenciales.protocol("WM_DELETE_WINDOW", self.cerrar_ventana_credenciales_auditor)
+            self.elementos.ventana_credenciales.protocol("WM_DELETE_WINDOW", self.cerrar_ventana_credenciales_proceso)
         else:
-            self.elementos.ventana_credenciales.focus_force()  # Enfoca la ventana existente para mostrarla en la parte delantera
+            self.elementos.ventana_credenciales.focus_force()  # Enfoca la ventana existente para mostrarla en la
 
-    def cerrar_ventana_credenciales_auditor(self):
+    def cerrar_ventana_credenciales_proceso(self):
         """
-                Método para cerrar la ventana de credenciales de auditor.
+                Método para cerrar la ventana de credenciales de proceso.
                 """
         # Manejar el cierre de la ventana
         self.elementos.ventana_credenciales.destroy()
@@ -513,5 +489,4 @@ class AuditorCrud:
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
         self.elementos.box_id.config(state=tk.NORMAL)
-        self.elementos.box_cedula.config(state=tk.NORMAL)
-        self.elementos.box_nombre.config(state=tk.NORMAL)
+        self.elementos.box_tipo.config(state=tk.NORMAL)
