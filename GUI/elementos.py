@@ -59,28 +59,64 @@ class Elementos:
         self.imagen_prestamo = None
 
     def elementos_crud(self):
-        # ETIQUETAS
 
-        self.label_frame = None
-        self.label_id = None
+        # ======= AUDITOR CRUD ==========
+        self.label_id_auditor = None
         self.label_cedula = None
-        self.label_nombre = None
+
+        self.box_id_auditor = None
+        self.box_cedula = None
+
+        # ======== CONTRUBUYENTE CRUD ========
+        self.label_id_contribuyente = None
         self.label_tipo = None
 
-
-        self.label_antiguo_id = None
-        self.label_nuevo_id = None
-
-        # CAJAS DE TEXTO
-        self.box_id = None
-        self.box_cedula = None
-        self.box_nombre = None
+        self.box_id_contribuyente = None
         self.box_tipo = None
 
+        # ======== PROCESO CRUD ==========
+        self.label_id_proceso = None
+        self.box_id_proceso = None
+
+        #======== EXPEDIENTE CRUD ========
+        self.label_id_expediente = None
+        self.label_id_caja = None
+        self.label_estado = None
+        self.label_año_gravable = None
+
+        self.box_id_expediente = None
+        self.box_id_caja = None
+        self.box_estado = None
+        self.box_año_gravable = None
+
+
+        # ====== PRESTAMO CRUD =========
+        self.label_id_prestamo = None
+        self.label_fecha_entrega = None
+        self.label_fecha_devolucion = None
+        self.label_responsable = None
+        self.label_area = None
+
+        self.box_id_prestamo = None
+        self.box_fecha_entrega = None
+        self.box_fecha_devolucion = None
+        self.box_responsable = None
+        self.box_area = None
+
+        # ======= CRUD COMUN ============
+        self.label_frame = None
+        self.label_nombre = None
+        self.label_antiguo_id = None
+        self.label_nuevo_id = None
+        self.label_id = None
+
+        self.box_nombre = None
         self.box_antiguo_id = None
         self.box_nuevo_id = None
+        self.box_id = None
 
-        # BOTONES
+
+        # =========BOTONES ============
         self.boton_insertar = None
         self.boton_modificar = None
         self.boton_eliminar = None
@@ -89,12 +125,19 @@ class Elementos:
         self.boton_aceptar = None
         self.boton_cancelar = None
 
-
         # TABLA
         self.tree = None
 
     def variables_crud(self):
         self.id_variable = tk.StringVar()
+        self.id_variable_auditor = tk.StringVar()
+        self.id_variable_contribuyente = tk.StringVar()
+        self.id_variable_proceso = tk.StringVar()
+        self.id_variable_expediente = tk.StringVar()
+        self.id_variable_prestamo = tk.StringVar()
+        self.id_variable_caja = tk.StringVar()
+        self.estado_variable = tk.StringVar()
+        self.año_gravable_variable = tk.StringVar()
         self.cedula_variable = tk.StringVar()
         self.nombre_variable = tk.StringVar()
         self.tipo_variable = tk.StringVar()

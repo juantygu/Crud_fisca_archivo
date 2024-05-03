@@ -27,7 +27,7 @@ class ConsultasProceso:
             self.connector = BDConnector()
 
             # Consulta SQL para obtener los datos del proceso
-            query = "SELECT * FROM procesos WHERE"
+            query = "SELECT id_proceso, nombre_proceso FROM procesos WHERE"
             conditions = []
             values = []
 
@@ -79,7 +79,7 @@ class ConsultasProceso:
             self.connector = BDConnector()
 
             # Consulta SQL para obtener todos los procesos
-            query = "SELECT * FROM procesos"
+            query = "SELECT id_proceso, nombre_proceso FROM procesos"
             resultado = self.connector.execute_query(query)
             procesos = resultado.fetchall()
 

@@ -5,6 +5,7 @@ from tkinter import ttk
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.proceso_crud import ProcesoCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.expediente_crud import ExpedienteCrud
 
 
 class Gestion:
@@ -58,7 +59,7 @@ class Gestion:
         # ======BOTON EXPEDIENTE========
         self.elementos.boton_expediente = tk.Button(self.ventana_principal, text="Expediente", font=("Arial", 20, "bold"),
                                                  fg="black", bg="white", bd=4, relief=tk.GROOVE, width=300, height=150,
-                                                 command=self.on_boton_auditor)
+                                                 command=self.on_boton_expediente)
         self.elementos.boton_expediente.place(x=posicion_x1[0], y=posicion_y_fila1)
         self.elementos.imagen_expediente = PhotoImage(file="D:\pythonProject\Crud_fisca_archivo\imagenes\expediente.png")
         self.elementos.imagen_expediente = self.elementos.imagen_expediente.subsample(
@@ -153,6 +154,20 @@ class Gestion:
         self.interfaz.borrar_estado_anterior("gestion")
         proceso_crud = ProcesoCrud(self.ventana_principal, self.elementos, self.interfaz)
         proceso_crud.mostrar_proceso_crud()
+
+    def on_boton_expediente(self):
+        """
+                                Maneja el evento de clic en el botón "Expediente".
+
+                                Parameters:
+                                - None
+
+                                Returns:
+                                - None
+                                """
+        self.interfaz.borrar_estado_anterior("gestion")
+        expediente_crud = ExpedienteCrud(self.ventana_principal, self.elementos, self.interfaz)
+        expediente_crud.mostrar_expediente_crud()
 
 
 

@@ -23,7 +23,9 @@ class ConsultasCompuestas():
                 """
         try:
             self.connector = BDConnector()
-            query = "SELECT contribuyente.nombre_contribuyente , auditor.nombre_auditor, expediente.*"  \
+            query = "SELECT contribuyente.nombre_contribuyente , auditor.nombre_auditor, expediente.id_expediente," \
+                    "expediente.id_contribuyente, expediente.id_auditor, expediente.id_proceso, expediente.id_caja," \
+                    "expediente.id_prestamo, expediente.estado, expediente.año_gravable" \
                     " FROM expediente " \
                     " INNER JOIN contribuyente ON expediente.id_contribuyente = contribuyente.id_contribuyente" \
                     " INNER JOIN auditor ON expediente.id_auditor = auditor.id_auditor" \
@@ -96,7 +98,9 @@ class ConsultasCompuestas():
                 """
         try:
             self.connector = BDConnector()
-            query = "SELECT contribuyente.nombre_contribuyente, auditor.nombre_auditor,  expediente.*" \
+            query = "SELECT contribuyente.nombre_contribuyente, auditor.nombre_auditor,  expediente.id_expediente," \
+                    "expediente.id_contribuyente, expediente.id_auditor, expediente.id_proceso, expediente.id_prestamo," \
+                    " expediente.id_caja, expediente.estado, expediente.año_gravable" \
                     " FROM expediente" \
                     " INNER JOIN contribuyente ON expediente.id_contribuyente = contribuyente.id_contribuyente" \
                     " INNER JOIN auditor ON expediente.id_auditor = auditor.id_auditor" \

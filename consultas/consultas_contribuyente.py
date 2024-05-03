@@ -14,7 +14,7 @@ class ConsultasContribuyente:
 
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM contribuyente WHERE"
+            query = "SELECT id_contribuyente, nombre_contribuyente, tipo FROM contribuyente WHERE"
             conditions = []
             values = []
 
@@ -60,7 +60,7 @@ class ConsultasContribuyente:
     def obtener_contribuyentes_por_tipo(self, tipo):
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM contribuyente WHERE tipo = %s"
+            query = "SELECT id_contribuyente, nombre_contribuyente, tipo FROM contribuyente WHERE tipo = %s"
             self.connector.execute_query(query, (tipo,))
             contribuyentes = self.connector.fetch_all()
 
@@ -90,7 +90,7 @@ class ConsultasContribuyente:
     def mostrar_contribuyentes(self):
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM contribuyente"
+            query = "SELECT id_contribuyente, nombre_contribuyente, tipo FROM contribuyente"
             self.connector.execute_query(query)
             contribuyentes = self.connector.fetch_all()
 

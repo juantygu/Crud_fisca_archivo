@@ -10,7 +10,7 @@ from GUI.menu_interfaz.Menu_principal.modulo_gestion.gestion import Gestion
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.proceso_crud import ProcesoCrud
-
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.expediente_crud import ExpedienteCrud
 
 class Interfaz():
     def __init__(self):
@@ -279,10 +279,10 @@ class Interfaz():
             self.elementos.label_titulo.destroy()
             self.elementos.boton_atras.destroy()
             self.elementos.label_frame.destroy()
-            self.elementos.label_id.destroy()
+            self.elementos.label_id_auditor.destroy()
             self.elementos.label_nombre.destroy()
             self.elementos.label_cedula.destroy()
-            self.elementos.box_id.destroy()
+            self.elementos.box_id_auditor.destroy()
             self.elementos.box_nombre.destroy()
             self.elementos.box_cedula.destroy()
             self.elementos.boton_insertar.destroy()
@@ -306,7 +306,7 @@ class Interfaz():
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_auditor.config(state=tk.NORMAL)
             self.elementos.box_cedula.config(state=tk.NORMAL)
             self.elementos.box_nombre.config(state=tk.NORMAL)
 
@@ -317,10 +317,10 @@ class Interfaz():
             self.elementos.label_titulo.destroy()
             self.elementos.boton_atras.destroy()
             self.elementos.label_frame.destroy()
-            self.elementos.label_id.destroy()
+            self.elementos.label_id_contribuyente.destroy()
             self.elementos.label_nombre.destroy()
             self.elementos.label_tipo.destroy()
-            self.elementos.box_id.destroy()
+            self.elementos.box_id_contribuyente.destroy()
             self.elementos.box_nombre.destroy()
             self.elementos.box_tipo.destroy()
             self.elementos.boton_insertar.destroy()
@@ -345,7 +345,7 @@ class Interfaz():
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
             self.elementos.box_tipo.config(state=tk.NORMAL)
             self.elementos.box_nombre.config(state=tk.NORMAL)
 
@@ -356,9 +356,9 @@ class Interfaz():
             self.elementos.label_titulo.destroy()
             self.elementos.boton_atras.destroy()
             self.elementos.label_frame.destroy()
-            self.elementos.label_id.destroy()
+            self.elementos.label_id_proceso.destroy()
             self.elementos.label_tipo.destroy()
-            self.elementos.box_id.destroy()
+            self.elementos.box_id_proceso.destroy()
             self.elementos.box_tipo.destroy()
             self.elementos.boton_insertar.destroy()
             self.elementos.boton_modificar.destroy()
@@ -381,7 +381,7 @@ class Interfaz():
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_proceso.config(state=tk.NORMAL)
             self.elementos.box_tipo.config(state=tk.NORMAL)
 
             self.estado_actual = "gestion_proceso_crud"

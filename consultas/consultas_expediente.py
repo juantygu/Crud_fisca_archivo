@@ -18,7 +18,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_expediente = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_expediente = %s"
             values = (id_expediente,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -57,7 +57,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_contribuyente = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_contribuyente = %s"
             values = (id_contribuyente,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -97,7 +97,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_auditor = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_auditor = %s"
             values = (id_auditor,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -137,7 +137,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_proceso = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_proceso = %s"
             values = (id_proceso,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -174,7 +174,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_prestamo IS NOT NULL"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_prestamo IS NOT NULL"
             self.connector.execute_query(query)
             expedientes = self.connector.fetch_all()
 
@@ -213,7 +213,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE id_caja = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_caja = %s"
             values = (id_caja,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -253,7 +253,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE estado = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE estado = %s"
             values = (estado,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -293,7 +293,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT * FROM expediente WHERE año_gravable = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE año_gravable = %s"
             values = (año_gravable,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -321,7 +321,11 @@ class ConsultasExpediente:
             if self.connector:
                 self.connector.close_connection()
 
-consultas = ConsultasExpediente()
+
+
+
+
+#consultas = ConsultasExpediente()
 #result = consultas.buscar_por_id_expediente("i010")
 #result = consultas.buscar_por_id_contribuyente("020"
 #result = consultas.buscar_por_id_auditor("A025")
@@ -330,4 +334,3 @@ consultas = ConsultasExpediente()
 #result = consultas.buscar_por_id_caja("o111")
 #result = consultas.buscar_por_estado("activo")
 #result = consultas.buscar_por_año_gravable("2019")
-#print(result)

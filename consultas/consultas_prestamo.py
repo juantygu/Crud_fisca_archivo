@@ -40,7 +40,7 @@ class ConsultasPrestamo:
                     raise ValueError("La fecha de inicio no puede ser mayor que la fecha final.")
 
             # Consulta SQL para buscar los préstamos por rango de fechas
-            query = "SELECT * FROM prestamo WHERE "
+            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo WHERE "
             values = ()
 
             if fecha_inicio and fecha_fin:
@@ -116,7 +116,7 @@ class ConsultasPrestamo:
                     raise ValueError("La fecha de inicio no puede ser mayor que la fecha final.")
 
             # Consulta SQL para buscar los préstamos por rango de fechas
-            query = "SELECT * FROM prestamo WHERE "
+            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo WHERE "
             values = ()
 
             if fecha_inicio and fecha_fin:
@@ -174,7 +174,7 @@ class ConsultasPrestamo:
         try:
             self.connector = BDConnector()
             #"SELECT * FROM prestamo WHERE responsable = %s AND area = %s"
-            query = "SELECT * FROM prestamo WHERE "
+            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo WHERE "
             values = ()
 
             if responsable and area:
@@ -227,7 +227,7 @@ class ConsultasPrestamo:
         try:
             self.connector = BDConnector()
 
-            query = "SELECT * FROM prestamo ORDER BY fecha_entrega DESC"
+            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo ORDER BY fecha_entrega DESC"
 
             # Agregar la cláusula LIMIT si se especifica la cantidad
             if cantidad:

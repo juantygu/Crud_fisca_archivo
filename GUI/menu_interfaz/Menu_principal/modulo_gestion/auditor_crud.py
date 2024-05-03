@@ -46,16 +46,16 @@ class AuditorCrud:
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
             # =====ETIQUETA ID_Auditor ======
-            self.elementos.label_id = tk.Label(self.elementos.label_frame, text="ID_auditor", font=("Arial", 14, "bold"),
+            self.elementos.label_id_auditor = tk.Label(self.elementos.label_frame, text="ID_auditor", font=("Arial", 14, "bold"),
                                                fg="black", bg="#E6F7FF")
-            self.elementos.label_id.place(x=45, y=30)
+            self.elementos.label_id_auditor.place(x=45, y=30)
 
             # =====CAJA ID_Auditor =========
-            self.elementos.box_id = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable, bd=3,
+            self.elementos.box_id_auditor = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable_auditor, bd=3,
                                              font=("Arial", 12), width=15, insertbackground="blue", selectbackground="blue",
                                              relief=tk.RIDGE)
-            self.elementos.box_id.place(x=145, y=30)
-            self.elementos.box_id.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
+            self.elementos.box_id_auditor.place(x=145, y=30)
+            self.elementos.box_id_auditor.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA CEDULA ====
             self.elementos.label_cedula = tk.Label(self.elementos.label_frame, text="Cedula", font=("Arial", 14, "bold"),
@@ -180,8 +180,8 @@ class AuditorCrud:
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
-                self.elementos.box_id.delete(0, tk.END)
-                self.elementos.box_id.insert(0, values[0])
+                self.elementos.box_id_auditor.delete(0, tk.END)
+                self.elementos.box_id_auditor.insert(0, values[0])
                 self.elementos.box_cedula.delete(0, tk.END)
                 self.elementos.box_cedula.insert(0, values[1])
                 self.elementos.box_nombre.delete(0, tk.END)
@@ -189,7 +189,7 @@ class AuditorCrud:
 
                 # Deshabilitar el botón "Insertar" y self.elementos.box_id
                 self.elementos.boton_insertar.config(state=tk.DISABLED)
-                self.elementos.box_id.config(state=tk.DISABLED)
+                self.elementos.box_id_auditor.config(state=tk.DISABLED)
 
 
         except ValueError as error:
@@ -200,13 +200,13 @@ class AuditorCrud:
                 Método para limpiar las cajas de texto en la interfaz gráfica.
                 """
         # Verificar si el botón "Insertar" y la entrada box_id están deshabilitados
-        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id['state'] == tk.DISABLED:
+        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id_auditor['state'] == tk.DISABLED:
 
             # Habilitar el botón "Insertar" y la entrada box_id
             self.elementos.boton_insertar.config(state=tk.NORMAL)
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_auditor.config(state=tk.NORMAL)
 
-        self.elementos.box_id.delete(0, tk.END)
+        self.elementos.box_id_auditor.delete(0, tk.END)
         self.elementos.box_cedula.delete(0, tk.END)
         self.elementos.box_nombre.delete(0, tk.END)
 
@@ -214,7 +214,7 @@ class AuditorCrud:
         """
                 Método para insertar un nuevo auditor en la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
+        id_auditor = self.elementos.box_id_auditor.get().strip()
         cedula_auditor = self.elementos.box_cedula.get().strip()
         nombre_auditor = self.elementos.box_nombre.get().strip()
         # Verificar si ambas cajas de texto tienen un valor
@@ -259,7 +259,7 @@ class AuditorCrud:
         """
                 Método para eliminar un auditor de la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
+        id_auditor = self.elementos.box_id_auditor.get().strip()
 
         # Verificar si ambas cajas de texto tienen un valor
         if id_auditor:
@@ -299,7 +299,7 @@ class AuditorCrud:
         """
                 Método para eliminar un auditor de la base de datos.
                 """
-        id_auditor = self.elementos.box_id.get().strip()
+        id_auditor = self.elementos.box_id_auditor.get().strip()
         nueva_cedula_auditor = self.elementos.box_cedula.get().strip()
         nuevo_nombre_auditor = self.elementos.box_nombre.get().strip()
 
@@ -401,7 +401,7 @@ class AuditorCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
-        self.elementos.box_id.config(state=tk.DISABLED)
+        self.elementos.box_id_auditor.config(state=tk.DISABLED)
         self.elementos.box_cedula.config(state=tk.DISABLED)
         self.elementos.box_nombre.config(state=tk.DISABLED)
 
@@ -453,7 +453,7 @@ class AuditorCrud:
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
-            self.elementos.box_id.config(state=tk.DISABLED)
+            self.elementos.box_id_auditor.config(state=tk.DISABLED)
             self.elementos.box_cedula.config(state=tk.DISABLED)
             self.elementos.box_nombre.config(state=tk.DISABLED)
 
@@ -512,6 +512,6 @@ class AuditorCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
-        self.elementos.box_id.config(state=tk.NORMAL)
+        self.elementos.box_id_auditor.config(state=tk.NORMAL)
         self.elementos.box_cedula.config(state=tk.NORMAL)
         self.elementos.box_nombre.config(state=tk.NORMAL)

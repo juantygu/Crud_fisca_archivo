@@ -28,7 +28,7 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
             self.connector = BDConnector()
 
             # Consulta SQL para obtener los datos del auditor
-            query = "SELECT * FROM auditor WHERE"
+            query = "SELECT id_auditor, cedula, nombre_auditor FROM auditor WHERE"
             conditions = []
             values = []
 
@@ -82,7 +82,7 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
         try: # Crear una instancia de BDConnector
             self.connector = BDConnector()
             # Consulta SQL para la modificación
-            query = "SELECT * from auditor"
+            query = "SELECT id_auditor, cedula, nombre_auditor from auditor"
             resultado = self.connector.execute_query(query)
             auditores = resultado.fetchall()
             if auditores:

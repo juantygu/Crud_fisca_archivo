@@ -49,16 +49,16 @@ class ContribuyenteCrud:
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
             # =====ETIQUETA ID_Contribuyente ======
-            self.elementos.label_id = tk.Label(self.elementos.label_frame, text="ID_contribuyente", font=("Arial", 14, "bold"),
+            self.elementos.label_id_contribuyente = tk.Label(self.elementos.label_frame, text="ID_contribuyente", font=("Arial", 14, "bold"),
                                                fg="black", bg="#E6F7FF")
-            self.elementos.label_id.place(x=45, y=30)
+            self.elementos.label_id_contribuyente.place(x=45, y=30)
 
             # =====CAJA ID_Contribuyente =========
-            self.elementos.box_id = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable, bd=3,
+            self.elementos.box_id_contribuyente = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable_contribuyente, bd=3,
                                              font=("Arial", 12), width=15, insertbackground="blue", selectbackground="blue",
                                              relief=tk.RIDGE)
-            self.elementos.box_id.place(x=145, y=30)
-            self.elementos.box_id.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
+            self.elementos.box_id_contribuyente.place(x=145, y=30)
+            self.elementos.box_id_contribuyente.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA TIPO ====
             self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 14, "bold"),
@@ -187,8 +187,8 @@ class ContribuyenteCrud:
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
-                self.elementos.box_id.delete(0, tk.END)
-                self.elementos.box_id.insert(0, values[0])
+                self.elementos.box_id_contribuyente.delete(0, tk.END)
+                self.elementos.box_id_contribuyente.insert(0, values[0])
                 #self.elementos.box_tipo.delete(0, tk.END)
                 #self.elementos.box_tipo.insert(0, values[2])
                 self.elementos.box_tipo.set(values[2])
@@ -197,7 +197,7 @@ class ContribuyenteCrud:
 
                 # Deshabilitar el botón "Insertar" y self.elementos.box_id
                 self.elementos.boton_insertar.config(state=tk.DISABLED)
-                self.elementos.box_id.config(state=tk.DISABLED)
+                self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
 
         except ValueError as error:
             print(f"fError al seleccionar registro : {error}")
@@ -207,13 +207,13 @@ class ContribuyenteCrud:
                 Método para limpiar las cajas de texto en la interfaz gráfica.
                 """
         # Verificar si el botón "Insertar" y la entrada box_id están deshabilitados
-        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id['state'] == tk.DISABLED:
+        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id_contribuyente['state'] == tk.DISABLED:
 
             # Habilitar el botón "Insertar" y la entrada box_id
             self.elementos.boton_insertar.config(state=tk.NORMAL)
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
 
-        self.elementos.box_id.delete(0, tk.END)
+        self.elementos.box_id_contribuyente.delete(0, tk.END)
         self.elementos.box_tipo.delete(0, tk.END)
         self.elementos.box_nombre.delete(0, tk.END)
 
@@ -221,7 +221,7 @@ class ContribuyenteCrud:
         """
                 Método para insertar un nuevo contribuyente en la base de datos.
                 """
-        id_contribuyente = self.elementos.box_id.get().strip()
+        id_contribuyente = self.elementos.box_id_contribuyente.get().strip()
         tipo_contribuyente = self.elementos.box_tipo.get().strip()
         nombre_contribuyente = self.elementos.box_nombre.get().strip()
         if id_contribuyente and tipo_contribuyente and nombre_contribuyente:
@@ -265,7 +265,7 @@ class ContribuyenteCrud:
         """
                 Método para eliminar un contribuyente de la base de datos.
                 """
-        id_contribuyente = self.elementos.box_id.get().strip()
+        id_contribuyente = self.elementos.box_id_contribuyente.get().strip()
         # Verificar si ambas cajas de texto tienen un valor
         if id_contribuyente:
             try:
@@ -304,7 +304,7 @@ class ContribuyenteCrud:
         """
                 Método para modificar los datos de un contribuyente en la base de datos.
                 """
-        id_contribuyente = self.elementos.box_id.get().strip()
+        id_contribuyente = self.elementos.box_id_contribuyente.get().strip()
         nuevo_tipo_contribuyente = self.elementos.box_tipo.get().strip()
         nuevo_nombre_contribuyente = self.elementos.box_nombre.get().strip()
 
@@ -405,7 +405,7 @@ class ContribuyenteCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
-        self.elementos.box_id.config(state=tk.DISABLED)
+        self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
         self.elementos.box_tipo.config(state=tk.DISABLED)
         self.elementos.box_nombre.config(state=tk.DISABLED)
 
@@ -457,7 +457,7 @@ class ContribuyenteCrud:
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
-            self.elementos.box_id.config(state=tk.DISABLED)
+            self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
             self.elementos.box_tipo.config(state=tk.DISABLED)
             self.elementos.box_nombre.config(state=tk.DISABLED)
 
@@ -516,7 +516,7 @@ class ContribuyenteCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
-        self.elementos.box_id.config(state=tk.NORMAL)
+        self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
         self.elementos.box_tipo.config(state=tk.NORMAL)
         self.elementos.box_nombre.config(state=tk.NORMAL)
 

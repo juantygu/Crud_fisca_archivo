@@ -48,23 +48,22 @@ class ProcesoCrud:
                                                        relief=tk.RIDGE)
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
-            # =====ETIQUETA ID_Contribuyente ======
-            self.elementos.label_id = tk.Label(self.elementos.label_frame, text="ID_proceso", font=("Arial", 14, "bold"),
+            # =====ETIQUETA ID_proceso ======
+            self.elementos.label_id_proceso = tk.Label(self.elementos.label_frame, text="ID_proceso", font=("Arial", 14, "bold"),
                                                fg="black", bg="#E6F7FF")
-            self.elementos.label_id.place(x=45, y=30)
+            self.elementos.label_id_proceso.place(x=45, y=30)
 
-            # =====CAJA ID_Contribuyente =========
-            self.elementos.box_id = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable, bd=3,
+            # =====CAJA ID_proceso =========
+            self.elementos.box_id_proceso = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable_proceso, bd=3,
                                              font=("Arial", 12), width=15, insertbackground="blue", selectbackground="blue",
                                              relief=tk.RIDGE)
-            self.elementos.box_id.place(x=145, y=30)
-            self.elementos.box_id.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
+            self.elementos.box_id_proceso.place(x=145, y=30)
+            self.elementos.box_id_proceso.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA nombre_proceso ====
             self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 14, "bold"),
                                                    fg="black", bg="#E6F7FF")
             self.elementos.label_tipo.place(x=45, y=60)
-
 
             self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
@@ -167,13 +166,13 @@ class ProcesoCrud:
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
-                self.elementos.box_id.delete(0, tk.END)
-                self.elementos.box_id.insert(0, values[0])
+                self.elementos.box_id_proceso.delete(0, tk.END)
+                self.elementos.box_id_proceso.insert(0, values[0])
                 self.elementos.box_tipo.set(values[1])
 
                 # Deshabilitar el botón "Insertar" y self.elementos.box_id
                 self.elementos.boton_insertar.config(state=tk.DISABLED)
-                self.elementos.box_id.config(state=tk.DISABLED)
+                self.elementos.box_id_proceso.config(state=tk.DISABLED)
 
         except ValueError as error:
             print(f"fError al seleccionar registro : {error}")
@@ -183,20 +182,20 @@ class ProcesoCrud:
                 Método para limpiar las cajas de texto en la interfaz gráfica.
                 """
         # Verificar si el botón "Insertar" y la entrada box_id están deshabilitados
-        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id['state'] == tk.DISABLED:
+        if self.elementos.boton_insertar['state'] == tk.DISABLED and self.elementos.box_id_proceso['state'] == tk.DISABLED:
 
             # Habilitar el botón "Insertar" y la entrada box_id
             self.elementos.boton_insertar.config(state=tk.NORMAL)
-            self.elementos.box_id.config(state=tk.NORMAL)
+            self.elementos.box_id_proceso.config(state=tk.NORMAL)
 
-        self.elementos.box_id.delete(0, tk.END)
+        self.elementos.box_id_proceso.delete(0, tk.END)
         self.elementos.box_tipo.delete(0, tk.END)
 
     def insertar_proceso(self):
         """
                 Método para insertar un nuevo proceso en la base de datos.
                 """
-        id_proceso = self.elementos.box_id.get().strip()
+        id_proceso = self.elementos.box_id_proceso.get().strip()
         nombre_proceso = self.elementos.box_tipo.get().strip()
 
         if id_proceso and nombre_proceso:
@@ -240,7 +239,7 @@ class ProcesoCrud:
         """
                 Método para eliminar un proceso de la base de datos.
                 """
-        id_proceso = self.elementos.box_id.get().strip()
+        id_proceso = self.elementos.box_id_proceso.get().strip()
         # Verificar si ambas cajas de texto tienen un valor
         if id_proceso:
             try:
@@ -279,7 +278,7 @@ class ProcesoCrud:
         """
                 Método para modificar los datos de un proceso en la base de datos.
                 """
-        id_proceso = self.elementos.box_id.get().strip()
+        id_proceso = self.elementos.box_id_proceso.get().strip()
         nuevo_nombre_proceso = self.elementos.box_tipo.get().strip()
 
         if id_proceso and nuevo_nombre_proceso:
@@ -379,7 +378,7 @@ class ProcesoCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
-        self.elementos.box_id.config(state=tk.DISABLED)
+        self.elementos.box_id_proceso.config(state=tk.DISABLED)
         self.elementos.box_tipo.config(state=tk.DISABLED)
 
         # ===== ETIQUETA ANTIGUO_ID =======
@@ -430,7 +429,7 @@ class ProcesoCrud:
             self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
-            self.elementos.box_id.config(state=tk.DISABLED)
+            self.elementos.box_id_proceso.config(state=tk.DISABLED)
             self.elementos.box_tipo.config(state=tk.DISABLED)
 
             self.elementos.ventana_credenciales = tk.Tk()
@@ -488,5 +487,5 @@ class ProcesoCrud:
         self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
-        self.elementos.box_id.config(state=tk.NORMAL)
+        self.elementos.box_id_proceso.config(state=tk.NORMAL)
         self.elementos.box_tipo.config(state=tk.NORMAL)
