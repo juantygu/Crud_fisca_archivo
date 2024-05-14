@@ -227,7 +227,7 @@ class ConsultasPrestamo:
         try:
             self.connector = BDConnector()
 
-            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo ORDER BY fecha_entrega DESC"
+            query = "SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area FROM prestamo ORDER BY fecha_entrega DESC , id_prestamo DESC"
 
             # Agregar la cláusula LIMIT si se especifica la cantidad
             if cantidad:
@@ -259,6 +259,62 @@ class ConsultasPrestamo:
             if self.connector:
                 self.connector.close_connection()
 
+    def obtener_ultimo_prestamo(self):
+        """
+        Función obtener_ultimo_prestamo:
+
+        Descripción:
+        Obtiene el último préstamo modificado o insertado en la tabla 'prestamo' junto con otros 10 préstamos más recientes
+        o iguales en términos de fecha de modificación.
+
+        Argumentos:
+        - No recibe argumentos adicionales. Utiliza la conexión a la base de datos establecida en el objeto 'self.connector'.
+
+        Retorna:
+        - Una tupla con un mensaje indicando el resultado de la operación ('Muestra de expedientes exitosa' o 'No se
+          encontraron datos de expedientes') y los datos de los préstamos obtenidos de la base de datos. Si no se
+          encontraron datos, los datos de los préstamos serán 'None'.
+        """
+        try:
+            self.connector = BDConnector()
+            query = """
+                SELECT id_prestamo, fecha_entrega, fecha_devolucion, responsable, area 
+                FROM prestamo 
+                WHERE fecha_modificacion <= (
+                    SELECT fecha_modificacion 
+                    FROM prestamo 
+                    ORDER BY fecha_modificacion DESC 
+                    LIMIT 1
+                ) 
+                ORDER BY fecha_modificacion DESC 
+                LIMIT 11
+            """
+            self.connector.execute_query(query)
+            expedientes = self.connector.fetch_all()
+
+            if expedientes:
+                print("Muestra de expedientes exitosa")
+                return "Muestra de expedientes exitosa", expedientes
+            else:
+                print("No se encontraron datos de expedientes.")
+                return "No se encontraron datos de expedientes.", None
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return "Error de interfaz ", None
+        except mysql.connector.DatabaseError as db_err:
+            print(f"Error de la base de datos: {db_err}")
+            return "Error de la base de datos", None
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return "Error de MySQL", None
+        except Exception as e:
+            print(f"Error al obtener datos de expedientes: {e}")
+            return "Error al obtener datos de expedientes", None
+        finally:
+            if self.connector:
+                self.connector.close_connection()
+
     def validar_formato_fecha(self, fecha: str):
         """
         Valida el formato de una fecha en formato 'YYYY-MM-DD'.
@@ -285,12 +341,12 @@ class ConsultasPrestamo:
                 return "Formato de fecha inválido", False
 
 
-consulta = ConsultasPrestamo()
+#consulta = ConsultasPrestamo()
 #result= consulta.buscar_por_fecha_entrega(fecha_inicio="2024-05-29",fecha_fin="2024-03-29")
 #result= consulta.buscar_por_fecha_devolucion(fecha_inicio="2024-05-29",fecha_fin="2024-03-29")
 #result= consulta.mostrar_prestamos()
-result = consulta.buscar_por_responsable_area(area="fiscalizacion")
-print(result)
+#result = consulta.buscar_por_responsable_area(area="fiscalizacion")
 #result= consulta.validar_formato_fecha("2020-02-31")
+#result = consulta.obtener_ultimo_prestamo()
 #print(result)
 

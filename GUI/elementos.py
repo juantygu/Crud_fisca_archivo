@@ -41,6 +41,9 @@ class Elementos:
     def elementos_consultar(self):
         self.boton_nombre = None
         self.boton_documento = None
+        self.boton_buscar =  None
+        self.label_busqueda_id_contribuyente = None
+        self.box_busqueda_id_contribuyente = None
 
     def elementos_gestion(self):
         self.boton_expediente = None
@@ -88,7 +91,10 @@ class Elementos:
         self.box_id_caja = None
         self.box_estado = None
         self.box_año_gravable = None
-
+        self.box_año_gravable_1 = None
+        self.box_año_gravable_2 = None
+        self.box_año_gravable_3 = None
+        self.box_año_gravable_4 = None
 
         # ====== PRESTAMO CRUD =========
         self.label_id_prestamo = None
@@ -109,6 +115,10 @@ class Elementos:
         self.label_antiguo_id = None
         self.label_nuevo_id = None
         self.label_id = None
+        self.label_info = None
+        self.label_info_auditores = None
+        self.label_info_procesos = None
+
 
         self.box_nombre = None
         self.box_antiguo_id = None
@@ -120,7 +130,7 @@ class Elementos:
         self.boton_insertar = None
         self.boton_modificar = None
         self.boton_eliminar = None
-        self.boton_limpiar_caja_auditores = None
+        self.boton_limpiar_cajas = None
         self.boton_cambiar_id = None
         self.boton_aceptar = None
         self.boton_cancelar = None
@@ -138,12 +148,20 @@ class Elementos:
         self.id_variable_caja = tk.StringVar()
         self.estado_variable = tk.StringVar()
         self.año_gravable_variable = tk.StringVar()
+        self.año_gravable_1_variable = tk.StringVar()
+        self.año_gravable_2_variable = tk.StringVar()
+        self.año_gravable_3_variable = tk.StringVar()
+        self.año_gravable_4_variable = tk.StringVar()
         self.cedula_variable = tk.StringVar()
         self.nombre_variable = tk.StringVar()
         self.tipo_variable = tk.StringVar()
 
         self.antiguo_id_variable = tk.StringVar()
         self.nuevo_id_variable = tk.StringVar()
+
+        self.busqueda_id_contribuyente_variable = tk.StringVar()
+
+
 
     def ventanas_emergentes(self):
         self.ventana_credenciales = None

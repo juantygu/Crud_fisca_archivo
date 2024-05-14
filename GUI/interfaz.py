@@ -187,6 +187,19 @@ class Interfaz():
                 messagebox.showerror("Error", "Usuario o contraseña incorrectos")
                 self.elementos.ventana_credenciales.focus_force()
 
+        if estado_actual == "gestion_expediente_crud":
+            usuario_admin = self.elementos.entry_user_admin.get()
+            contrasena_admin = self.elementos.entry_password_admin.get()
+
+            if usuario_admin == self.user_admin and contrasena_admin == self.password_admin:
+                # Si las credenciales son correctas,
+                self.elementos.ventana_credenciales.destroy()
+                expediente_crud = ExpedienteCrud(self.ventana_principal, self.elementos, self)
+                expediente_crud.cambiar_id_expiente()
+            else:
+                # Si las credenciales son incorrectas, muestra un mensaje de error
+                messagebox.showerror("Error", "Usuario o contraseña incorrectos")
+                self.elementos.ventana_credenciales.focus_force()
 
     def atras(self): # CONDICIONES SI SE OPRIME EL BOTON REGRESAR
         """
@@ -252,6 +265,19 @@ class Interfaz():
         if self.estado_actual == "g_p_c_cambiar_id_proceso":
             self.borrar_estado_anterior("g_p_c_cambiar_id_proceso")
 
+        # ========= EXPEDIENTE CRUD ============
+        if self.estado_actual == "gestion_expediente_crud":
+            self.borrar_estado_anterior("gestion_expediente_crud")
+
+            # Crear intancia de gestion y mostrar gestion
+            gestion = Gestion(self.ventana_principal, self.elementos, self)
+            gestion.mostrar_gestion()
+
+        # ======== EXPEDIENTE CRUD (cambiar id EXPEDIENTE) =====================
+        if self.estado_actual == "g_e_c_cambiar_id_expediente":
+            self.borrar_estado_anterior("g_e_c_cambiar_id_expediente")
+
+
     def borrar_estado_anterior(self,estado_anterior): # borra los elementos del estado en el estaba antes de dar click
         """
                     Borra los elementos del estado anterior en la interfaz.
@@ -288,6 +314,7 @@ class Interfaz():
             self.elementos.boton_insertar.destroy()
             self.elementos.boton_modificar.destroy()
             self.elementos.boton_eliminar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
         if estado_anterior == "g_a_c_cambiar_id_auditor": # gestion_auditor_crud
@@ -303,7 +330,7 @@ class Interfaz():
             self.elementos.boton_insertar.config(state=tk.NORMAL)
             self.elementos.boton_eliminar.config(state=tk.NORMAL)
             self.elementos.boton_modificar.config(state=tk.NORMAL)
-            self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
             self.elementos.box_id_auditor.config(state=tk.NORMAL)
@@ -326,6 +353,7 @@ class Interfaz():
             self.elementos.boton_insertar.destroy()
             self.elementos.boton_modificar.destroy()
             self.elementos.boton_eliminar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
         if estado_anterior == "g_c_c_cambiar_id_contribuyente": # gestion_contribuyente_crud
@@ -342,7 +370,7 @@ class Interfaz():
             self.elementos.boton_insertar.config(state=tk.NORMAL)
             self.elementos.boton_eliminar.config(state=tk.NORMAL)
             self.elementos.boton_modificar.config(state=tk.NORMAL)
-            self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
             self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
@@ -363,6 +391,7 @@ class Interfaz():
             self.elementos.boton_insertar.destroy()
             self.elementos.boton_modificar.destroy()
             self.elementos.boton_eliminar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
         if estado_anterior == "g_p_c_cambiar_id_proceso":
@@ -378,7 +407,7 @@ class Interfaz():
             self.elementos.boton_insertar.config(state=tk.NORMAL)
             self.elementos.boton_eliminar.config(state=tk.NORMAL)
             self.elementos.boton_modificar.config(state=tk.NORMAL)
-            self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
             self.elementos.boton_atras.config(state=tk.NORMAL)
 
             self.elementos.box_id_proceso.config(state=tk.NORMAL)
@@ -387,6 +416,81 @@ class Interfaz():
             self.estado_actual = "gestion_proceso_crud"
             self.elementos.ventana_credenciales_abierta = False
             print(self.estado_actual)
+        if estado_anterior == "gestion_expediente_crud":
+            self.elementos.label_titulo.destroy()
+            self.elementos.boton_atras.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.label_id_expediente.destroy()
+            self.elementos.label_id_contribuyente.destroy()
+            self.elementos.label_id_auditor.destroy()
+            self.elementos.label_id_proceso.destroy()
+            self.elementos.label_id_caja.destroy()
+            self.elementos.label_estado.destroy()
+            self.elementos.label_año_gravable.destroy()
+            self.elementos.box_id_expediente.destroy()
+            self.elementos.box_id_contribuyente.destroy()
+            self.elementos.box_id_auditor.destroy()
+            self.elementos.box_id_proceso.destroy()
+            self.elementos.box_id_caja.destroy()
+            self.elementos.box_estado.destroy()
+            self.elementos.box_año_gravable.destroy()
+            self.elementos.box_año_gravable_1.destroy()
+            self.elementos.box_año_gravable_2.destroy()
+            self.elementos.box_año_gravable_3.destroy()
+            self.elementos.box_año_gravable_4.destroy()
+            self.elementos.boton_insertar.destroy()
+            self.elementos.boton_modificar.destroy()
+            self.elementos.boton_eliminar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.boton_cambiar_id.destroy()
+            self.elementos.label_info.destroy()
+            self.elementos.label_info_procesos.destroy()
+            self.elementos.label_info_auditores.destroy()
+            self.elementos.label_busqueda_id_contribuyente.destroy()
+            self.elementos.box_busqueda_id_contribuyente.destroy()
+            self.elementos.boton_buscar.destroy()
+
+        if estado_anterior == "g_e_c_cambiar_id_expediente":
+
+            self.elementos.label_titulo.destroy()
+            self.elementos.label_antiguo_id.destroy()
+            self.elementos.label_nuevo_id.destroy()
+            self.elementos.box_antiguo_id.destroy()
+            self.elementos.box_nuevo_id.destroy()
+            self.elementos.boton_aceptar.destroy()
+            self.elementos.boton_cancelar.destroy()
+
+            # habilitar botones y cajas
+            self.elementos.boton_insertar.config(state=tk.NORMAL)
+            self.elementos.boton_eliminar.config(state=tk.NORMAL)
+            self.elementos.boton_modificar.config(state=tk.NORMAL)
+            self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
+            self.elementos.boton_atras.config(state=tk.NORMAL)
+
+            self.elementos.box_id_expediente.config(state=tk.NORMAL)
+            self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
+            self.elementos.box_id_auditor.config(state=tk.NORMAL)
+            self.elementos.box_id_proceso.config(state=tk.NORMAL)
+            self.elementos.box_id_caja.config(state=tk.NORMAL)
+            self.elementos.box_estado.config(state=tk.NORMAL)
+            self.elementos.box_año_gravable.config(state=tk.NORMAL)
+            self.elementos.box_año_gravable_1.config(state=tk.NORMAL)
+            self.elementos.box_año_gravable_2.config(state=tk.NORMAL)
+            self.elementos.box_año_gravable_3.config(state=tk.NORMAL)
+            self.elementos.box_año_gravable_4.config(state=tk.NORMAL)
+
+            self.estado_actual = "gestion_expediente_crud"
+            self.elementos.ventana_credenciales_abierta = False
+            print(self.estado_actual)
+
+
+
+
+
+
+
+
 
 
 

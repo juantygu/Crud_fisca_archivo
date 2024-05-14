@@ -14,6 +14,21 @@ class Expediente:
         self.proceso = Proceso()
 
     def insertar_expediente(self,id_expediente, id_contribuyente, id_auditor, id_proceso, id_caja, estado, anos_gravable: list):
+        """
+            Inserta un nuevo expediente en la base de datos.
+
+            Parameters:
+            - id_expediente : ID del expediente a insertar.
+            - id_contribuyente : ID del contribuyente asociado al expediente.
+            - id_auditor : ID del auditor asociado al expediente.
+            - id_proceso : ID del proceso asociado al expediente.
+            - id_caja : ID de la caja asociada al expediente.
+            - estado : Estado del expediente.
+            - anos_gravable : Lista de años gravables asociados al expediente.
+
+            Returns:
+            - mensaje y booleano: Mensaje de éxito o error de la inserción y un booleano que indica si la inserción fue exitosa.
+            """
         expedientes_insertados = []  # Lista para almacenar los expedientes insertados exitosamente
         # Verificar si hay valores duplicados en la lista
         if len(anos_gravable) != len(set(anos_gravable)):
@@ -34,20 +49,20 @@ class Expediente:
             # verificar existencia del expediente
             mensaje_expediente, verificacion_expediente = self.verificar_expedientes_existen(id_expediente, connection=self.connector)
             if verificacion_expediente:
-                # el expediente existe , por lo tanto no se puede ingresar ya que ya tiene un proceso , si se desea agregar otro año gravable
-                # debera ser por otro metodo agregar año agravable a  expediente existente " tener en cuanta que maximo son 5 años gravables por expediente
                 print(mensaje_expediente)
-
-                # Verificar cantidad de años gravables
-                mensaje_años, verificacion_años = self.contar_anos_gravables(id_expediente)
-                if verificacion_años: # el expediente tiene menos de 5 años gravables
-                    print(mensaje_años)
-                    print(f"No se puede ingresar ya que tiene  un proceso.{mensaje_años}, si desea agregar otro año debera ser por otro metodo")
-                    return f"No se puede ingresar ya que tiene  un proceso.{mensaje_años} , si desea agregar otro año debera ser por otro metodo", False
-                else: # el expediente tiene mas de 5 años gravables
-                    print(mensaje_años)
-                    print(f"No se puede ingresar ya que tiene  un proceso, en los años {mensaje_años}")
-                    return f"No se puede ingresar ya que tiene  un proceso, en los años {mensaje_años}", False
+                # verificar dato dupliado
+                mensaje_duplicado, verificacion_duplicado = self.verificar_duplicados(id_expediente, anos_gravable, connection=self.connector)
+                if verificacion_duplicado:
+                    print(mensaje_duplicado)
+                    raise ValueError("ID duplicado en la tabla expediente.")
+                else:
+                    mensaje_años,cantidad_anos, verificacion_años = self.contar_anos_gravables(id_expediente, connection=self.connector)
+                    if not verificacion_años: # el expediente tiene mas de 5 años gravables
+                        print(f"No se puede ingresar ya que tiene  un proceso,{mensaje_años}")
+                        return f"No se puede ingresar ya que tiene  un proceso,{mensaje_años}", False
+                    elif len(anos_gravable) + cantidad_anos > 5:
+                        print(f"No se puede ingresar ya que el expediente no puede tener mas de 5 años gravables")
+                        return f"No se puede ingresar ya que el expediente no puede tener mas de 5 años gravables", False
 
             print("puede continuar con la inserción")
 
@@ -127,6 +142,11 @@ class Expediente:
                 print(f"Error de MySQL: {mysql_err}")
                 self.connector.connection.rollback()
                 return f"Error de MySQL: {mysql_err}", False
+        except ValueError as error:
+            # Verificar si el error es debido a un no dígito en id_auditor
+            if "ID duplicado en la tabla expediente." in str(error):
+                self.connector.connection.rollback()
+                return "ID duplicado en la tabla expediente.", False
         except Exception as e:
             print(f"Error al insertar en la tabla expediente: {e}")
             self.connector.connection.rollback()
@@ -136,6 +156,21 @@ class Expediente:
                 self.connector.close_connection()
 
     def agregar_ano_gravable(self, id_expediente, id_contribuyente, id_auditor, id_proceso, id_caja, estado, nuevo_ano_gravable, connection=None):
+        """
+            Agrega un nuevo año gravable a un expediente existente en la base de datos.
+
+            Parameters:
+            - id_expediente : ID del expediente al cual se agregará el nuevo año gravable.
+            - id_contribuyente : ID del contribuyente asociado al expediente.
+            - id_auditor : ID del auditor asociado al expediente.
+            - id_proceso : ID del proceso asociado al expediente.
+            - id_caja : ID de la caja asociada al expediente.
+            - estado : Estado del expediente.
+            - nuevo_ano_gravable : Nuevo año gravable a agregar.
+
+            Returns:
+            - mensaje y booleano: Mensaje de éxito o error de la inserción y un booleano que indica si la inserción fue exitosa.
+            """
         try:
             # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
             if connection is None:
@@ -160,7 +195,7 @@ class Expediente:
             print(mensaje_en_prestamo, verificacion_en_prestamo)
 
             # Verificar si el expediente tiene menos de 5 años gravables
-            mensaje_años, verificacion_años = self.contar_anos_gravables(id_expediente,connection=self.connector)
+            mensaje_años,cantidad, verificacion_años = self.contar_anos_gravables(id_expediente,connection=self.connector)
             if not verificacion_años:
                 # el expediente tiene mas de 5 años gravables
                 print(mensaje_años)
@@ -242,6 +277,15 @@ class Expediente:
                 self.connector.close_connection()
 
     def eliminar_expediente_por_id(self,id_expediente, connection=None):
+        """
+            Elimina un expediente de la base de datos por su ID.
+
+            Parameters:
+            - id_expediente : ID del expediente a eliminar.
+
+            Returns:
+            - mensaje y booleano: Mensaje de éxito o error de la eliminación y un booleano que indica si la eliminación fue exitosa.
+            """
         try:
             # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
             if connection is None:
@@ -281,6 +325,17 @@ class Expediente:
                 self.connector.close_connection()
 
     def eliminar_expediente_por_ano(self,id_expediente, ano_gravable):
+        """
+            Elimina un expediente de la base de datos por su ID y año gravable.
+
+            Parameters:
+            - id_expediente : ID del expediente a eliminar.
+            - ano_gravable : Año gravable asociado al expediente a eliminar.
+
+            Returns:
+            - mensaje y booleano: Mensaje de éxito o error de la eliminación y un booleano que indica si la eliminación fue exitosa.
+            """
+
         try:
             # Crear una instancia de BDConnector
             self.connector = BDConnector()
@@ -317,6 +372,17 @@ class Expediente:
                 self.connector.close_connection()
 
     def contar_anos_gravables(self, id_expediente, connection=None):
+        """
+                Cuenta los años gravables asociados a un expediente.
+
+                Parameters:
+                - id_expediente : ID del expediente.
+                - connection : Conexión a la base de datos (opcional).
+
+                Returns:
+                - mensaje y booleano: Mensaje de éxito o error de la cuenta de años gravables y un booleano que indica si la operación fue exitosa.
+                """
+
         try:
             # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
             if connection is None:
@@ -338,12 +404,12 @@ class Expediente:
                 anos_gravables.append(valor)
             """
             print(anos_gravables)
-            if cantidad_anos > 5:
+            if cantidad_anos >= 5:
                 print(f"el expediente tiene mas de 5 años gravables")
-                return f"el expediente tiene mas de 5 años gravables", False
+                return f"el expediente tiene mas de 5 años gravables",cantidad_anos, False
             else:
                 print(f"el expediente = {id_expediente} tiene {cantidad_anos} años gravables. ({anos_gravables})")
-                return f"el expediente = {id_expediente} tiene {cantidad_anos} años gravables. ({anos_gravables})", True
+                return f"el expediente = {id_expediente} tiene {cantidad_anos} años gravables. ({anos_gravables})",cantidad_anos, True
 
         except mysql.connector.InterfaceError as interface_err:
             print(f"Error de interfaz con MySQL: {interface_err}")
@@ -362,18 +428,34 @@ class Expediente:
                 # Cerrar la conexión solo si fue creada dentro de la función
                 self.connector.close_connection()
 
-    def modificar_datos_expediente(self,id_expediente,ano_gravable,id_nuevo_expediente,id_nuevo_contribuyente, id_nuevo_auditor,id_nuevo_proceso,id_nueva_caja,nuevo_estado, nuevo_ano_gravable):
+    def modificar_datos_expediente(self,id_expediente,id_nuevo_contribuyente, id_nuevo_auditor,id_nuevo_proceso,id_nueva_caja,nuevo_estado, ano_gravable):
+        """
+                Modifica los datos de un expediente.
+
+                Parameters:
+                - id_expediente : ID del expediente.
+                - id_nuevo_contribuyente : Nuevo ID del contribuyente asociado al expediente.
+                - id_nuevo_auditor : Nuevo ID del auditor asociado al expediente.
+                - id_nuevo_proceso : Nuevo ID del proceso asociado al expediente.
+                - id_nueva_caja : Nuevo ID de la caja asociada al expediente.
+                - nuevo_estado : Nuevo estado del expediente.
+                - ano_gravable : Año gravable asociado al expediente.
+
+                Returns:
+                - mensaje y booleano: Mensaje de éxito o error de la modificación de datos del expediente y un booleano que indica si la operación fue exitosa.
+                """
+
         try:
             # Crear una instancia de BDConnector
             self.connector = BDConnector()
 
-            # Verificar si la combinación de id_expediente y  nuevo año_gravable ya existe
-            mensaje_combinacion, verificacion_combinacion = self.verificar_combinacion_existe(id_expediente,nuevo_ano_gravable,connection=self.connector)
-            if verificacion_combinacion:
+            ## Verificar si la combinación de id_expediente y  nuevo año_gravable ya existe
+            #mensaje_combinacion, verificacion_combinacion = self.verificar_combinacion_existe(id_expediente,nuevo_ano_gravable,connection=self.connector)
+            #if verificacion_combinacion:
                 # la combinacion de expediente y año existen
-                print(mensaje_combinacion)
-                return mensaje_combinacion, False
-            print(mensaje_combinacion)
+                #print(mensaje_combinacion)
+                #return mensaje_combinacion, False
+            #print(mensaje_combinacion)
 
             # verificar si el expediente esta prestamo , como logica el expediente no puede ser modificado si esta prestado por seguridad
             mensaje_en_prestamo, verificacion_en_prestamo = self.verificar_expedientes_prestados(id_expediente, connection=self.connector)
@@ -411,9 +493,9 @@ class Expediente:
             print(mensaje_proceso, verificacion_proceso)
 
             # Consulta SQL para la modificación
-            query = "UPDATE expediente SET id_expediente=%s, id_contribuyente = %s,id_auditor = %s,id_proceso = %s,id_caja = %s" \
-                    ",estado = %s, año_gravable = %s  WHERE id_expediente = %s AND año_gravable =%s"
-            values = (id_nuevo_expediente,id_nuevo_contribuyente, id_nuevo_auditor, id_nuevo_proceso, id_nueva_caja, nuevo_estado, nuevo_ano_gravable, id_expediente, ano_gravable)
+            query = "UPDATE expediente SET id_contribuyente = %s,id_auditor = %s,id_proceso = %s,id_caja = %s" \
+                    ",estado = %s WHERE id_expediente = %s AND año_gravable =%s"
+            values = (id_nuevo_contribuyente, id_nuevo_auditor, id_nuevo_proceso, id_nueva_caja, nuevo_estado, id_expediente, ano_gravable)
             # Ejecutar la consulta
             self.connector.execute_query(query, values)
             # Confirmar los cambios
@@ -422,8 +504,8 @@ class Expediente:
                 print(self.connector.cursor.rowcount, "Modificación exitosa del expediente.")
                 return "Modificación exitosa del expediente.", True
             else:
-                print(self.connector.cursor.rowcount, "Modificación erronea , revise id_expediente y año_gravable.")
-                return "Modificación erronea , revise id_expediente y año_gravable." , False
+                print(self.connector.cursor.rowcount, "Modificación erronea .")
+                return "Modificación erronea." , False
 
         except mysql.connector.InterfaceError as interface_err:
             print(f"Error de interfaz con MySQL: {interface_err}")
@@ -446,6 +528,16 @@ class Expediente:
                 self.connector.close_connection()
 
     def modificar_id_expediente(self,id_viejo_expediente,id_nuevo_expediente):
+        """
+                Modifica el ID de un expediente.
+
+                Parameters:
+                - id_viejo_expediente : ID del expediente a modificar.
+                - id_nuevo_expediente : Nuevo ID del expediente.
+
+                Returns:
+                - mensaje y booleano: Mensaje de éxito o error de la modificación del ID del expediente y un booleano que indica si la operación fue exitosa.
+                """
         try:
             # Crear una instancia de BDConnector
             self.connector = BDConnector()
@@ -492,6 +584,18 @@ class Expediente:
                 self.connector.close_connection()
 
     def cambiar_estado_expediente(self, id_expediente, anos_gravables, nuevo_estado, connection=None):
+        """
+                Cambia el estado de un expediente.
+
+                Parameters:
+                - id_expediente : ID del expediente.
+                - anos_gravables : Años gravables asociados al expediente.
+                - nuevo_estado : Nuevo estado del expediente.
+                - connection : Conexión a la base de datos (opcional).
+
+                Returns:
+                - mensaje y booleano: Mensaje de éxito o error del cambio de estado del expediente y un booleano que indica si la operación fue exitosa.
+                """
         try:
             # Verificar si hay valores duplicados en la lista
             if len(anos_gravables) != len(set(anos_gravables)):
@@ -696,7 +800,6 @@ class Expediente:
                 print(f"los siguientes expedientes estan disponibles {expedientes_no_prestados}")
                 return f"los siguientes expedientes estan disponibles {expedientes_no_prestados}", False
 
-
         except mysql.connector.InterfaceError as interface_err:
             print(f"Error de interfaz con MySQL: {interface_err}")
             return f"Error de interfaz con MySQL: {interface_err}", False
@@ -762,18 +865,73 @@ class Expediente:
                 self.connector.close_connection()
                 print("conexion cerrada")
 
+    def verificar_duplicados(self, id_expediente, lista_anos_gravable, connection=None):
+        """
+        Verifica si la combinación de id_expediente y año_gravable ya existe en la base de datos.
+
+        Parameters:
+        - id_expediente : ID del expediente a verificar.
+        - lista_anos_gravable : Lista de años gravables a verificar.
+
+        Returns:
+        - mensaje y booleano: Mensaje y booleano indicando si hay duplicados.
+        """
+        try:
+            # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
+            if connection is None:
+                self.connector = BDConnector()
+            else:
+                self.connector = connection
+
+            duplicados = []
+            for ano_gravable in lista_anos_gravable:
+                # Consulta SQL para verificar la existencia de la combinación
+                query = "SELECT COUNT(*) FROM expediente WHERE id_expediente = %s AND año_gravable = %s"
+                values = (id_expediente, ano_gravable)
+                self.connector.execute_query(query, values)
+                resultado = self.connector.fetch_one()
+
+                if resultado[0] > 0:
+                    duplicados.append(ano_gravable)
+
+            if not duplicados:
+                mensaje = f"No se encontraron duplicados para el expediente con ID {id_expediente}."
+                print(mensaje)
+                return mensaje, False
+            else:
+                mensaje = f"Se encontraron duplicados para el expediente con ID {id_expediente} en los años gravables: {duplicados}."
+                print(mensaje)
+                return mensaje, True
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return f"Error de interfaz con MySQL: {interface_err}", False
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return f"Error de MySQL: {mysql_err}", False
+        except Exception as e:
+            print(f"Error al verificar la combinación: {e}")
+            return f"Error al verificar la combinación: {e}", False
+        finally:
+            if connection is None and self.connector:
+                # Cerrar la conexión solo si fue creada dentro de la función
+                self.connector.close_connection()
+                print("conexion cerrada")
+
 
 
 
 expediente = Expediente()
 #expediente.insertar_expediente("o0199", "006", "A005", "3", "o10", "activo", [2021,2022])
 #expediente.agregar_ano_gravable("i010", "006", "A003", "3", "o10", "activo", 2022)
-#expediente.eliminar_expediente_por_ano("i010", "2022")
+#expediente.eliminar_expediente_por_ano("i12", "2023")
 #expediente.eliminar_expediente_por_id("o015")
 #expediente.modificar_datos_expediente("i011", 2023, "i011", "007", "A003", "2", "o11", "auto archivo", 2022)
-#expediente.modificar_id_expediente("o010","o011")
+#expediente.modificar_id_expediente("2021","i12")
 #expediente.verificar_expedientes_existen(["i009"])
 #expediente.verificar_expedientes_prestados(["o009","o009A","o010"])
 #expediente.contar_anos_gravables("i010")
 #expediente.cambiar_estado_expediente("o011",[2021,2022],"auto archivo")
 #expediente.verificar_combinacion_existe("i011",2015)
+#result = expediente.verificar_duplicados("i13",[2021,2022,2023,2024])
+#print(result)

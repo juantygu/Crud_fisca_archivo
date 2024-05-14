@@ -74,6 +74,12 @@ class ConsultasProceso:
                 self.connector.close_connection()
 
     def mostrar_procesos(self):
+        """
+            Muestra todos los procesos disponibles en la base de datos.
+
+            Returns:
+            - mensaje y procesos: Mensaje de éxito o error de la consulta y una lista de todos los procesos si la consulta fue exitosa.
+            """
         try:
             # Crear una instancia de BDConnector
             self.connector = BDConnector()
@@ -107,8 +113,46 @@ class ConsultasProceso:
                 # Cerrar la conexión
                 self.connector.close_connection()
 
-consultas = ConsultasProceso()
+    def mostrar_nombre_id_procesos(self):
+        """
+            Muestra los nombres y el id de todos los procesos de la base de datos.
+
+            Returns:
+            - mensaje y procesos: Mensaje de éxito o error de la consulta y una lista de los nombres e ids de los procesos si la consulta fue exitosa.
+            """
+
+        try: # Crear una instancia de BDConnector
+            self.connector = BDConnector()
+            # Consulta SQL para la modificación
+            query = "SELECT id_proceso,nombre_proceso from procesos"
+            resultado = self.connector.execute_query(query)
+            procesos = resultado.fetchall()
+            if procesos:
+                print("Muestra de procesos exitosa")
+                return "Muestra de procesos exitosa", procesos
+            else:
+                print("No se encontraron datos de procesos")
+                return "No se encontraron datos de procesos ", None
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return "Error de interfaz ", None
+        except mysql.connector.DatabaseError as db_err:
+            print(f"Error de la base de datos: {db_err}")
+            return "Error de la base de datos", None
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return "Error de MySQL", None
+        except Exception as e:
+            print(f"Error al obtener datos del proceso: {e}")
+            return "Error al obtener datos del proceso", None
+        finally:
+            if self.connector:
+                # Cerrar la conexión
+                self.connector.close_connection()
+
+#consultas = ConsultasProceso()
 #procesoo = consultas.obtener_proceso(id_proceso="3",nombre_proceso="sancionatorio")
 #print(procesoo)
-procesoss = consultas.mostrar_procesos()
-print(procesoss[1])
+#procesoss = consultas.mostrar_procesos()
+#print(procesoss[1])

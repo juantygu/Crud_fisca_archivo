@@ -100,11 +100,11 @@ class AuditorCrud:
             self.elementos.boton_eliminar.place(x=250, y=170)
 
             # ====BOTON LIMPIAR CAJA ========
-            self.elementos.boton_limpiar_caja_auditores = tk.Button(self.elementos.label_frame, text="LIMPIAR",
+            self.elementos.boton_limpiar_cajas = tk.Button(self.elementos.label_frame, text="LIMPIAR",
                                                       font=("Arial", 12, "bold"), fg="black", bg="white", bd=4,
                                                       relief=tk.GROOVE, width=7, height=1, activebackground='blue',
                                                       command=self.limpiar_cajas_texto)
-            self.elementos.boton_limpiar_caja_auditores.place(x=(500-100), y=(300-90))
+            self.elementos.boton_limpiar_cajas.place(x=(500-100), y=(300-90))
 
             # ======BOTON CAMBIAR ID =========
 
@@ -177,6 +177,7 @@ class AuditorCrud:
         try:
             itemseleccionado = self.elementos.tree.focus()
             if itemseleccionado:
+                self.elementos.box_id_auditor.config(state=tk.NORMAL)
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
@@ -398,7 +399,7 @@ class AuditorCrud:
         self.elementos.boton_insertar.config(state=tk.DISABLED)
         self.elementos.boton_eliminar.config(state=tk.DISABLED)
         self.elementos.boton_modificar.config(state=tk.DISABLED)
-        self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
+        self.elementos.boton_limpiar_cajas.config(state=tk.DISABLED)
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
         self.elementos.box_id_auditor.config(state=tk.DISABLED)
@@ -450,7 +451,7 @@ class AuditorCrud:
             self.elementos.boton_insertar.config(state=tk.DISABLED)
             self.elementos.boton_eliminar.config(state=tk.DISABLED)
             self.elementos.boton_modificar.config(state=tk.DISABLED)
-            self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
+            self.elementos.boton_limpiar_cajas.config(state=tk.DISABLED)
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
             self.elementos.box_id_auditor.config(state=tk.DISABLED)
@@ -509,7 +510,7 @@ class AuditorCrud:
         self.elementos.boton_insertar.config(state=tk.NORMAL)
         self.elementos.boton_eliminar.config(state=tk.NORMAL)
         self.elementos.boton_modificar.config(state=tk.NORMAL)
-        self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+        self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
         self.elementos.box_id_auditor.config(state=tk.NORMAL)

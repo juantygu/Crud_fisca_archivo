@@ -79,6 +79,12 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
                 self.connector.close_connection()
 
     def mostrar_auditores(self):
+        """
+            Muestra todos los auditores de la base de datos.
+
+            Returns:
+            - mensaje y auditores: Mensaje de éxito o error de la consulta y una lista de los auditores si la consulta fue exitosa.
+            """
         try: # Crear una instancia de BDConnector
             self.connector = BDConnector()
             # Consulta SQL para la modificación
@@ -109,11 +115,18 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
                 # Cerrar la conexión
                 self.connector.close_connection()
 
-    def mostrar_nombre_auditores(self):
+    def mostrar_nombre_id_auditores(self):
+        """
+            Muestra los nombres y el id de todos los auditores de la base de datos.
+
+            Returns:
+            - mensaje y auditores: Mensaje de éxito o error de la consulta y una lista de los nombres e ids de los auditores si la consulta fue exitosa.
+            """
+
         try: # Crear una instancia de BDConnector
             self.connector = BDConnector()
             # Consulta SQL para la modificación
-            query = "SELECT nombre_auditor from auditor"
+            query = "SELECT id_auditor,nombre_auditor from auditor"
             resultado = self.connector.execute_query(query)
             auditores = resultado.fetchall()
             if auditores:
@@ -141,9 +154,11 @@ class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
                 self.connector.close_connection()
 
 
+
+
 #consulta = ConsultasAuditor()
 #auditor= consulta.obtener_auditor(id_auditor="A001",cedula=900085)
 #print(auditor[1])
 #auditores = consulta.mostrar_auditores()
-#auditores = consulta.mostrar_nombre_auditores()
+#auditores = consulta.mostrar_nombre_id_auditores()
 #print(auditores)

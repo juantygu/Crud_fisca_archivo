@@ -65,14 +65,7 @@ class ContribuyenteCrud:
                                                    fg="black", bg="#E6F7FF")
             self.elementos.label_tipo.place(x=45, y=60)
 
-            # ===== CAJA TIPO ====
-            #self.elementos.box_tipo = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.tipo_variable, bd=3,
-                                                 #font=("Arial", 12), width=15, insertbackground="blue",
-                                                 #selectbackground="blue",
-                                                 #relief=tk.RIDGE)
-            #self.elementos.box_tipo.place(x=145, y=60)
-            #self.elementos.box_tipo.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
-            # Crear el combobox y configurarlo con las opciones
+            # =======combo box tipo=====
             self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
                                                    width=15)
@@ -108,11 +101,11 @@ class ContribuyenteCrud:
             self.elementos.boton_eliminar.place(x=250, y=170)
 
             # ====BOTON LIMPIAR CAJA ========
-            self.elementos.boton_limpiar_caja_auditores = tk.Button(self.elementos.label_frame, text="LIMPIAR",
+            self.elementos.boton_limpiar_cajas = tk.Button(self.elementos.label_frame, text="LIMPIAR",
                                                       font=("Arial", 12, "bold"), fg="black", bg="white", bd=4,
                                                       relief=tk.GROOVE, width=7, height=1, activebackground='blue',
                                                       command=self.limpiar_cajas_texto)
-            self.elementos.boton_limpiar_caja_auditores.place(x=(500-100), y=(300-90))
+            self.elementos.boton_limpiar_cajas.place(x=(500-100), y=(300-90))
 
             # ======BOTON CAMBIAR ID =========
 
@@ -165,7 +158,7 @@ class ContribuyenteCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            contribuyentes = self.consultas_contribuyente.mostrar_contribuyentes()
+            contribuyentes = self.consultas_contribuyente.obtener_ultimo_contribuyente()
             #print(contribuyentes)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
@@ -184,6 +177,7 @@ class ContribuyenteCrud:
         try:
             itemseleccionado = self.elementos.tree.focus()
             if itemseleccionado:
+                self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
@@ -402,7 +396,7 @@ class ContribuyenteCrud:
         self.elementos.boton_insertar.config(state=tk.DISABLED)
         self.elementos.boton_eliminar.config(state=tk.DISABLED)
         self.elementos.boton_modificar.config(state=tk.DISABLED)
-        self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
+        self.elementos.boton_limpiar_cajas.config(state=tk.DISABLED)
         self.elementos.boton_atras.config(state=tk.DISABLED)
 
         self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
@@ -454,7 +448,7 @@ class ContribuyenteCrud:
             self.elementos.boton_insertar.config(state=tk.DISABLED)
             self.elementos.boton_eliminar.config(state=tk.DISABLED)
             self.elementos.boton_modificar.config(state=tk.DISABLED)
-            self.elementos.boton_limpiar_caja_auditores.config(state=tk.DISABLED)
+            self.elementos.boton_limpiar_cajas.config(state=tk.DISABLED)
             self.elementos.boton_atras.config(state=tk.DISABLED)
 
             self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
@@ -513,7 +507,7 @@ class ContribuyenteCrud:
         self.elementos.boton_insertar.config(state=tk.NORMAL)
         self.elementos.boton_eliminar.config(state=tk.NORMAL)
         self.elementos.boton_modificar.config(state=tk.NORMAL)
-        self.elementos.boton_limpiar_caja_auditores.config(state=tk.NORMAL)
+        self.elementos.boton_limpiar_cajas.config(state=tk.NORMAL)
         self.elementos.boton_atras.config(state=tk.NORMAL)
 
         self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
