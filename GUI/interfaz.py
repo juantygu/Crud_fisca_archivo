@@ -277,6 +277,14 @@ class Interfaz():
         if self.estado_actual == "g_e_c_cambiar_id_expediente":
             self.borrar_estado_anterior("g_e_c_cambiar_id_expediente")
 
+        # ============PRESTAMO CRUD ==========================================
+        if self.estado_actual == "gestion_prestamo_crud":
+            self.borrar_estado_anterior("gestion_prestamo_crud")
+
+            # Crear intancia de gestion y mostrar gestion
+            gestion = Gestion(self.ventana_principal, self.elementos, self)
+            gestion.mostrar_gestion()
+
 
     def borrar_estado_anterior(self,estado_anterior): # borra los elementos del estado en el estaba antes de dar click
         """
@@ -356,6 +364,9 @@ class Interfaz():
             self.elementos.boton_limpiar_cajas.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
+            self.elementos.label_busqueda_id_contribuyente.destroy()
+            self.elementos.box_busqueda_id_contribuyente.destroy()
+            self.elementos.boton_buscar.destroy()
         if estado_anterior == "g_c_c_cambiar_id_contribuyente": # gestion_contribuyente_crud
 
             self.elementos.label_titulo.destroy()
@@ -450,7 +461,6 @@ class Interfaz():
             self.elementos.label_busqueda_id_contribuyente.destroy()
             self.elementos.box_busqueda_id_contribuyente.destroy()
             self.elementos.boton_buscar.destroy()
-
         if estado_anterior == "g_e_c_cambiar_id_expediente":
 
             self.elementos.label_titulo.destroy()
@@ -483,6 +493,32 @@ class Interfaz():
             self.estado_actual = "gestion_expediente_crud"
             self.elementos.ventana_credenciales_abierta = False
             print(self.estado_actual)
+
+        if estado_anterior == "gestion_prestamo_crud":
+            self.elementos.label_titulo.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.label_frame1.destroy()
+            self.elementos.label_frame3.destroy()
+            self.elementos.label_busqueda_id_expediente.destroy()
+            self.elementos.text_busqueda_id_expediente.destroy()
+            self.elementos.label_id_proceso.destroy()
+            self.elementos.box_id_proceso.destroy()
+            self.elementos.label_año_gravable.destroy()
+            self.elementos.box_año_gravable.destroy()
+            self.elementos.box_año_gravable_1.destroy()
+            self.elementos.box_año_gravable_2.destroy()
+            self.elementos.box_año_gravable_3.destroy()
+            self.elementos.box_año_gravable_4.destroy()
+            self.elementos.boton_buscar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
+            self.elementos.barra_desplazamiento_v.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.barra_desplazamiento_v.destroy()
+
+
+
+
+
 
 
 

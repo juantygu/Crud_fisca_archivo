@@ -1,10 +1,12 @@
 from data_base.db_connector import BDConnector
 import mysql.connector
+from entidades.expediente import Expediente
 
 
 class ConsultasExpediente:
     def __init__(self):
         self.connector = None
+        self.expediente = Expediente()
 
     def buscar_por_id_expediente(self, id_expediente):
         """
@@ -81,6 +83,102 @@ class ConsultasExpediente:
         except Exception as e:
             print(f"Error al buscar expedientes por ID de contribuyente: {e}")
             return "Error al buscar expedientes por ID de contribuyente", None
+        finally:
+            if self.connector:
+                self.connector.close_connection()
+
+    def buscar_y_verificar_expedientes(self, lista_id_contribuyentes: list, id_proceso, lista_anos_gravables=None):
+        """
+        Busca expedientes por una lista de IDs de contribuyentes, verifica cuáles existen,
+        cuáles están prestados y cuáles no se encontraron.
+
+        Parameters:
+        - lista_id_contribuyentes (list): Lista de IDs de contribuyentes.
+        - id_proceso (int): ID del proceso.
+        - lista_anos_gravables (list, optional): Lista de años gravables. Por defecto es None.
+
+        Returns:
+        - dict: Un diccionario con los resultados de la búsqueda y verificación.
+        """
+        resultados = {
+            "exp encontrados": [],  # lista para almacenar expedientes por ID de contribuyente
+            "ids encontrados": [],
+            "ids no_encontrados": [],  # Lista para almacenar IDs de contribuyentes no encontrados
+            "exp prestados": [],  # Lista para almacenar IDs de expedientes que están prestados
+            "exp disponibles": []  # Lista para almacenar IDs de expedientes que están disponibles
+        }
+
+        try:
+            self.connector = BDConnector()
+
+            # Realizar la búsqueda de expedientes para todos los IDs de contribuyentes a la vez
+            placeholders = ",".join(["%s"] * len(lista_id_contribuyentes))
+            query = f"""
+                SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable
+                FROM expediente WHERE id_contribuyente IN ({placeholders}) AND id_proceso = %s
+            """
+            values = tuple(lista_id_contribuyentes) + (id_proceso,)
+
+            # Añadir condición sobre los años gravables si se proporciona la lista
+            if lista_anos_gravables:
+                placeholders_anos = ",".join(["%s"] * len(lista_anos_gravables))
+                query += f" AND año_gravable IN ({placeholders_anos})"
+                values += tuple(lista_anos_gravables)
+
+            self.connector.execute_query(query, values)
+            expedientes = self.connector.fetch_all()
+            print(expedientes)
+
+            # Verificar si se encontraron expedientes
+            if expedientes:
+                contribuyentes_encontrados = []
+                for expediente in expedientes:
+                    id_contribuyente = expediente[1]
+                    if id_contribuyente not in contribuyentes_encontrados:
+                        contribuyentes_encontrados.append(id_contribuyente)
+                    resultados["exp encontrados"].append(expediente)
+
+                print("Contribuyentes encontrados:", contribuyentes_encontrados)
+                print("Expedientes encontrados:", resultados["exp encontrados"])
+
+                # Verificar el estado de préstamo de los expedientes encontrados
+                todos_expedientes_raw = [expediente[0] for expediente in expedientes]
+                todos_expedientes = list(set(todos_expedientes_raw))
+
+                print("Todos los expedientes:", todos_expedientes)
+                if todos_expedientes:  # Verificar solo si hay expedientes encontrados
+                    mensaje_prestamos, expedientes_prestados, expedientes_no_prestados, confirmacion = self.expediente.verificar_expedientes_prestados(
+                        todos_expedientes, self.connector
+                    )
+                    resultados["exp prestados"] = list(expedientes_prestados)
+                    resultados["exp disponibles"] = list(expedientes_no_prestados)
+                    resultados["ids encontrados"] = list(contribuyentes_encontrados)
+                    print("Expedientes prestados:", resultados["exp prestados"])
+                    print("Expedientes disponibles:", resultados["exp disponibles"])
+
+                ## Identificar contribuyentes no encontrados
+                print("resta", set(lista_id_contribuyentes), set(contribuyentes_encontrados))
+                resultados["ids no_encontrados"] = list(set(lista_id_contribuyentes) - set(contribuyentes_encontrados))
+
+            else:
+                # Si no se encontraron expedientes, todos los contribuyentes se consideran no encontrados
+                resultados["ids no_encontrados"] = lista_id_contribuyentes
+                resultados["exp disponibles"] = []  # Ningún expediente está disponible
+
+            return resultados
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return "Error de interfaz con MySQL"
+        except mysql.connector.DatabaseError as db_err:
+            print(f"Error de la base de datos: {db_err}")
+            return "Error de la base de datos"
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return "Error de MySQL"
+        except Exception as e:
+            print(f"Error al buscar y verificar expedientes: {e}")
+            return "Error al buscar y verificar expedientes"
         finally:
             if self.connector:
                 self.connector.close_connection()
@@ -376,7 +474,7 @@ class ConsultasExpediente:
         try:
             self.connector = BDConnector()
             query = """
-                SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_caja, estado, año_gravable 
+                SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable 
                 FROM expediente 
                 WHERE fecha_modificacion <= (
                     SELECT fecha_modificacion 
@@ -415,12 +513,7 @@ class ConsultasExpediente:
 
 
 
-
-
-
-
-
-#consultas = ConsultasExpediente()
+consultas = ConsultasExpediente()
 #result = consultas.buscar_por_id_expediente("i010")
 #result = consultas.buscar_por_id_contribuyente("020"
 #result = consultas.buscar_por_id_auditor("A025")
@@ -431,4 +524,9 @@ class ConsultasExpediente:
 #result = consultas.buscar_por_año_gravable("2019")
 #result = consultas.mostrar_expedientes()
 #result = consultas.obtener_ultimo_expediente()
-#print(result[1])
+#mensaje, resultados = consultas.buscar_y_verificar_expedientes(["700"],2)
+#print(resultados["exp encontrados"])
+#print(resultados["ids encontrados"])
+#print(resultados["ids no_encontrados"])
+#print(resultados["exp prestados"])
+#print(resultados["exp disponibles"])

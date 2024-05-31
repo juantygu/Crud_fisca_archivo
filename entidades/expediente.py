@@ -187,7 +187,7 @@ class Expediente:
             print(mensaje_expediente)
 
             # verificar si el expediente esta prestamo , como logica el expediente no puede ser modificado
-            mensaje_en_prestamo, verificacion_en_prestamo = self.verificar_expedientes_prestados(id_expediente,connection=self.connector)
+            mensaje_en_prestamo,expedientes_prestados, expedientes_no_prestados, verificacion_en_prestamo = self.verificar_expedientes_prestados(id_expediente,connection=self.connector)
             if verificacion_en_prestamo:
                 # el expediente esta prestado
                 print(mensaje_en_prestamo)
@@ -458,7 +458,7 @@ class Expediente:
             #print(mensaje_combinacion)
 
             # verificar si el expediente esta prestamo , como logica el expediente no puede ser modificado si esta prestado por seguridad
-            mensaje_en_prestamo, verificacion_en_prestamo = self.verificar_expedientes_prestados(id_expediente, connection=self.connector)
+            mensaje_en_prestamo,expedientes_prestados, expedientes_no_prestados, verificacion_en_prestamo = self.verificar_expedientes_prestados(id_expediente, connection=self.connector)
             if verificacion_en_prestamo:
                 # algun expediente esta prestado
                 print(mensaje_en_prestamo)
@@ -770,7 +770,7 @@ class Expediente:
             values = tuple(id_expedientes)
             self.connector.execute_query(query, values)
             result = self.connector.fetch_all()
-            print(result)
+            #print(result)
             resultado = set(result)
             print(resultado)
             expedientes_prestados = {id_exp for id_exp, id_prestamo in resultado if id_prestamo is not None}
@@ -792,13 +792,13 @@ class Expediente:
 
             if expedientes_prestados and not expedientes_no_prestados: # todos los expedientes prestados
                 print(f"los siguientes expedientes estan prestados {expedientes_prestados}")
-                return f"los siguientes expedientes estan prestados {expedientes_prestados}", True
+                return f"los siguientes expedientes estan prestados {expedientes_prestados}", expedientes_prestados, [], True
             elif expedientes_prestados and expedientes_no_prestados: # algun expediente esta prestado
                 print(f"expedientes disponibles {expedientes_no_prestados} , expedientes prestados {expedientes_prestados}")
-                return f"expedientes disponibles {expedientes_no_prestados}, expedientes prestados {expedientes_prestados}", True
+                return f"expedientes disponibles {expedientes_no_prestados}, expedientes prestados {expedientes_prestados}",expedientes_prestados, expedientes_no_prestados, True
             elif expedientes_no_prestados and not expedientes_prestados:
                 print(f"los siguientes expedientes estan disponibles {expedientes_no_prestados}")
-                return f"los siguientes expedientes estan disponibles {expedientes_no_prestados}", False
+                return f"los siguientes expedientes estan disponibles {expedientes_no_prestados}",[], expedientes_no_prestados, False
 
         except mysql.connector.InterfaceError as interface_err:
             print(f"Error de interfaz con MySQL: {interface_err}")
@@ -921,7 +921,7 @@ class Expediente:
 
 
 
-expediente = Expediente()
+#expediente = Expediente()
 #expediente.insertar_expediente("o0199", "006", "A005", "3", "o10", "activo", [2021,2022])
 #expediente.agregar_ano_gravable("i010", "006", "A003", "3", "o10", "activo", 2022)
 #expediente.eliminar_expediente_por_ano("i12", "2023")
@@ -929,7 +929,7 @@ expediente = Expediente()
 #expediente.modificar_datos_expediente("i011", 2023, "i011", "007", "A003", "2", "o11", "auto archivo", 2022)
 #expediente.modificar_id_expediente("2021","i12")
 #expediente.verificar_expedientes_existen(["i009"])
-#expediente.verificar_expedientes_prestados(["o009","o009A","o010"])
+#result= expediente.verificar_expedientes_prestados(["o009","o009A","o010"])
 #expediente.contar_anos_gravables("i010")
 #expediente.cambiar_estado_expediente("o011",[2021,2022],"auto archivo")
 #expediente.verificar_combinacion_existe("i011",2015)

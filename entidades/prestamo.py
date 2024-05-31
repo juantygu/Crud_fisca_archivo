@@ -48,7 +48,7 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
             print(mensaje_existencia, verificacion_existencia)
 
             # verificar si los expedientes estan prestados
-            mensaje_en_prestamo , verificacion_en_prestamo = self.expediente.verificar_expedientes_prestados(expedientes,connection=self.connector)
+            mensaje_en_prestamo ,expedientes_prestados, expedientes_no_prestados, verificacion_en_prestamo = self.expediente.verificar_expedientes_prestados(expedientes,connection=self.connector)
             if verificacion_en_prestamo:
                 # algun expediente esta prestado
                 print(mensaje_en_prestamo)
@@ -859,7 +859,7 @@ prestamo = Prestamo()
 #prestamo.insertar_id_prestamo_expediente(["o009A"],12)
 
 #===========FINALIZAR PRESTAMO=====================
-#prestamo.finalizar_prestamo(18,"2024-02-29")
+#prestamo.finalizar_prestamo(22,"2024-06-0")
 
 #===========MODIFICAR PRESTAMO ===================
 #prestamo.modificar_prestamo(1,"2024-02-13", nueva_fecha_devolucion = "2024-02-13",nuevo_responsable="jorgee",nueva_area= "fiscalizacion")

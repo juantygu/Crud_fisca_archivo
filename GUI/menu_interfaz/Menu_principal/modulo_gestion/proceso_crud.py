@@ -31,7 +31,7 @@ class ProcesoCrud:
                 """
         self.interfaz.estado_actual = "gestion_proceso_crud"
         print(self.interfaz.estado_actual)
-        opciones_tipo = ["Omisos", "Inexactos","sancionatorio","Omisos_R","Omisos_AR"]
+        opciones_tipo = ["Omisos", "Inexactos","Sancionatorio","Omisos_R","Omisos_AR"]
 
         try:
             altura_pantalla = self.interfaz.window_height
@@ -49,7 +49,7 @@ class ProcesoCrud:
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
             # =====ETIQUETA ID_proceso ======
-            self.elementos.label_id_proceso = tk.Label(self.elementos.label_frame, text="ID_proceso", font=("Arial", 14, "bold"),
+            self.elementos.label_id_proceso = tk.Label(self.elementos.label_frame, text="ID_proceso", font=("Arial", 12, "bold"),
                                                fg="black", bg="#E6F7FF")
             self.elementos.label_id_proceso.place(x=45, y=30)
 
@@ -61,13 +61,13 @@ class ProcesoCrud:
             self.elementos.box_id_proceso.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA nombre_proceso ====
-            self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 14, "bold"),
+            self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 12, "bold"),
                                                    fg="black", bg="#E6F7FF")
             self.elementos.label_tipo.place(x=45, y=60)
-
+            # ==== box tipo ====
             self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
-                                                   width=15)
+                                                   width=14)
             self.elementos.box_tipo.place(x=145, y=60)
 
             # ====== BOTON INSERTAR =====
@@ -97,7 +97,7 @@ class ProcesoCrud:
 
             # ======BOTON CAMBIAR ID =========
 
-            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_auditor",
+            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_proceso",
                                                       font=("Arial", 12, "bold"), fg="black", bg="red", bd=4,
                                                       relief=tk.GROOVE, width=15, height=1, activebackground='blue',
                                                       command=self.crear_ventana_credenciales_cambiar_id_proceso)
@@ -111,7 +111,7 @@ class ProcesoCrud:
             style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
             style.configure('Treeview', font=('Arial', 12))
 
-            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_PROCESO', 'NOMBRE_PROCESO'), show='headings',height=20)
+            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_PROCESO', 'NOMBRE_PROCESO'), show='headings',height=10)
             self.elementos.tree.heading('ID_PROCESO', text='ID_PROCESO')
             self.elementos.tree.column('ID_PROCESO', width=110, anchor='center')
             self.elementos.tree.heading('NOMBRE_PROCESO', text='NOMBRE_PROCESO')
@@ -204,7 +204,7 @@ class ProcesoCrud:
                 # Convertir id_auditor a cadena y verificar que contenga solo números
                 if id_proceso[0] not in "0123456789":
                     raise ValueError("ID del contribuyente debe comenzar con un numero.")
-                elif nombre_proceso not in ["Omisos", "Inexactos","sancionatorio","Omisos_R","Omisos_AR"]:
+                elif nombre_proceso not in ["Omisos", "Inexactos", "Omisos_R", "Omisos_AR", "Sancionatorio"]:
                     raise ValueError("El tipo de contribuyente debe ser uno de la lista'.")
 
                 mensaje, confirmacion = self.proceso.insertar_proceso(id_proceso, nombre_proceso)

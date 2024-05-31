@@ -43,7 +43,7 @@ class ConsultasContribuyente:
                 query += conditions[0]
 
             self.connector.execute_query(query, values)
-            result = self.connector.fetch_one()
+            result = self.connector.fetch_all()
 
             if result:
                 print("Datos del contribuyente encontrados:", result)

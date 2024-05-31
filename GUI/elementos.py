@@ -42,8 +42,14 @@ class Elementos:
         self.boton_nombre = None
         self.boton_documento = None
         self.boton_buscar =  None
+        self.boton_copiar = None
+        self.boton_copiar1 = None
+        self.boton_copiar2 = None
+        self.boton_copiar3 = None
         self.label_busqueda_id_contribuyente = None
         self.box_busqueda_id_contribuyente = None
+        self.label_busqueda_id_expediente = None
+        self.text_busqueda_id_expediente = None
 
     def elementos_gestion(self):
         self.boton_expediente = None
@@ -102,15 +108,27 @@ class Elementos:
         self.label_fecha_devolucion = None
         self.label_responsable = None
         self.label_area = None
+        self.label_ids_encontrados = None
+        self.label_ids_no_encontrados = None
+        self.label_exp_prestados = None
+        self.label_exp_disponibles = None
 
         self.box_id_prestamo = None
         self.box_fecha_entrega = None
         self.box_fecha_devolucion = None
         self.box_responsable = None
         self.box_area = None
+        self.text_busqueda_id_expediente_1 = None
+        self.text_ids_encontrados = None
+        self.text_ids_no_encontrados = None
+        self.text_exp_prestados = None
+        self.text_exp_disponibles = None
 
         # ======= CRUD COMUN ============
         self.label_frame = None
+        self.label_frame1 = None
+        self.label_frame2 = None
+        self.label_frame3 = None
         self.label_nombre = None
         self.label_antiguo_id = None
         self.label_nuevo_id = None
@@ -119,15 +137,20 @@ class Elementos:
         self.label_info_auditores = None
         self.label_info_procesos = None
 
-
         self.box_nombre = None
         self.box_antiguo_id = None
         self.box_nuevo_id = None
         self.box_id = None
 
+        self.barra_desplazamiento_v = None
+        self.barra_desplazamiento_v1 = None
+        self.barra_desplazamiento_v2 = None
+        self.barra_desplazamiento_v3 = None
+        self.barra_desplazamiento_v5 = None
 
         # =========BOTONES ============
         self.boton_insertar = None
+        self.boton_insertar1 = None
         self.boton_modificar = None
         self.boton_eliminar = None
         self.boton_limpiar_cajas = None
@@ -159,7 +182,10 @@ class Elementos:
         self.antiguo_id_variable = tk.StringVar()
         self.nuevo_id_variable = tk.StringVar()
 
+        self.responsable_variable = tk.StringVar()
+
         self.busqueda_id_contribuyente_variable = tk.StringVar()
+        self.area_variable =tk.StringVar()
 
 
 

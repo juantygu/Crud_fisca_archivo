@@ -46,7 +46,7 @@ class AuditorCrud:
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
             # =====ETIQUETA ID_Auditor ======
-            self.elementos.label_id_auditor = tk.Label(self.elementos.label_frame, text="ID_auditor", font=("Arial", 14, "bold"),
+            self.elementos.label_id_auditor = tk.Label(self.elementos.label_frame, text="ID_auditor", font=("Arial", 12, "bold"),
                                                fg="black", bg="#E6F7FF")
             self.elementos.label_id_auditor.place(x=45, y=30)
 
@@ -58,7 +58,7 @@ class AuditorCrud:
             self.elementos.box_id_auditor.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA CEDULA ====
-            self.elementos.label_cedula = tk.Label(self.elementos.label_frame, text="Cedula", font=("Arial", 14, "bold"),
+            self.elementos.label_cedula = tk.Label(self.elementos.label_frame, text="Cedula", font=("Arial", 12, "bold"),
                                                    fg="black", bg="#E6F7FF")
             self.elementos.label_cedula.place(x=45, y=60)
 
@@ -71,7 +71,7 @@ class AuditorCrud:
             self.elementos.box_cedula.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ===== ETIQUETA NOMBRE ======
-            self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 15, "bold"),
+            self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 12, "bold"),
                                                    fg="black", bg="#E6F7FF")
             self.elementos.label_nombre.place(x=45, y=90)
 

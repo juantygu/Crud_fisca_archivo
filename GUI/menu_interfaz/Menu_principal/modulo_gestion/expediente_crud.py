@@ -7,6 +7,7 @@ from consultas.consultas_auditor import ConsultasAuditor
 from consultas.consultas_expediente import ConsultasExpediente
 from consultas.consultas_proceso import ConsultasProceso
 from entidades.expediente import Expediente
+import re
 
 
 class ExpedienteCrud:
@@ -229,9 +230,9 @@ class ExpedienteCrud:
 
             # ======BOTON CAMBIAR ID =========
 
-            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_auditor",
+            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_expediente",
                                                         font=("Arial", 12, "bold"), fg="black", bg="red", bd=4,
-                                                        relief=tk.GROOVE, width=15, height=1, activebackground='blue',
+                                                        relief=tk.GROOVE, width=20, height=1, activebackground='blue',
                                                         command= self.crear_ventana_credenciales_cambiar_id_expediente)
             self.elementos.boton_cambiar_id.place(x=55, y=500)
 
@@ -362,13 +363,17 @@ class ExpedienteCrud:
 
                 if contribuyentes:
                     print(mensaje)
-                    # actualizamos los campos del tree
-                    self.elementos.tree.delete(*self.elementos.tree.get_children())
+                    try:
+                        # actualizamos los campos del tree
+                        self.elementos.tree.delete(*self.elementos.tree.get_children())
 
-                    # insertar lo nuevos datos  en el tree
-                    # mostrar datos en la tabla
-                    for row in contribuyentes:
-                        self.elementos.tree.insert("", "end", values=row)
+                        # insertar lo nuevos datos  en el tree
+                        # mostrar datos en la tabla
+                        for row in contribuyentes:
+                            self.elementos.tree.insert("", "end", values=row)
+                    except Exception as update_error:
+                        messagebox.showerror("Error", f"Error al actualizar la tabla: {update_error}")
+                        print(f"Error al actualizar la tabla: {update_error}")
                 else:
                     messagebox.showinfo("INFORMACIÓN", mensaje)
                     print(mensaje)
@@ -383,7 +388,6 @@ class ExpedienteCrud:
                     messagebox.showerror("Error de conexión", "No se pudo conectar a la base de datos.")
                 else:
                     messagebox.showerror("Error", str(error))
-                   #print(f"fError al actualizar tabla : {error}")
         else:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
@@ -408,9 +412,6 @@ class ExpedienteCrud:
                 self.elementos.tree.insert("", "end", values=row)
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
-
-
-
 
     def selecionar_registro_expediente(self, event):
         """
@@ -477,13 +478,26 @@ class ExpedienteCrud:
 
     def verificar_años_gravables(self, años_gravables):
         """
-        Verifica si los elementos de la lista de años gravables comienzan con "20".
-        Retorna True si todos los elementos comienzan con "20", False de lo contrario.
+        Verifica si los elementos de la lista de años gravables son válidos.
+        Un año es válido si comienza con "20" y tiene exactamente cuatro dígitos.
+        Retorna un mensaje y True si todos los elementos son válidos, de lo contrario,
+        retorna un mensaje indicando los años inválidos y False.
         """
+        pattern = re.compile(r"^20\d{2}$")
+        errores = []
+
         for año in años_gravables:
-            if not año.startswith("20"):
-                return False
-        return True
+            if not pattern.match(año):
+                if not re.match(r"^\d{4}$", año):
+                    errores.append(f"El año '{año}'debe tener exactamente cuatro dígitos")
+                elif not re.match(r"^20", año):
+                    errores.append(f"El año '{año}' debe empezar con '20' ")
+                else:
+                    errores.append(f"El año '{año}' tiene un formato inválido")
+
+        if errores:
+            return "\n".join(errores), False
+        return "Todos los años son válidos", True
 
     def insertar_expediente(self):
         """
@@ -506,7 +520,7 @@ class ExpedienteCrud:
 
         if id_expediente and id_contribuyente and id_auditor and id_proceso and id_caja and estado and años_gravables:
             try:
-                # CONVERTIR LA PRIMERA LETRA A MAYUSCULA y verificar
+                mensaje_ano, confirmacion_ano = self.verificar_años_gravables(años_gravables)
 
                 if id_expediente[0].upper() not in ['O', 'I', 'S']:
                     raise ValueError("ID del expediente debe empezar por O o I o S")
@@ -520,8 +534,8 @@ class ExpedienteCrud:
                     raise ValueError("ID caja debe empezar por O o I o S")
                 elif estado not in ["activo","auto archivo"]:
                     raise ValueError("el estado debe ser activo o auto archivo")
-                elif not self.verificar_años_gravables(años_gravables):
-                    raise ValueError("los años deben empezar por 20")
+                elif not confirmacion_ano:
+                    raise ValueError(mensaje_ano)
 
                 mensaje, confirmacion = self.expediente.insertar_expediente(id_expediente, id_contribuyente, id_auditor,
                                                                             id_proceso,id_caja, estado, años_gravables)
@@ -536,8 +550,6 @@ class ExpedienteCrud:
                 else:
                     messagebox.showinfo("INFORMACIÓN", mensaje)
                     print(mensaje)
-
-
 
             except ValueError as error:
                 # Verificar si el error es debido a un no dígito en id_auditor
@@ -564,10 +576,11 @@ class ExpedienteCrud:
         # Verificar si ambas cajas de texto tienen un valor
         if id_expediente and año_gravable:
             try:
+                mensaje_ano, confirmacion_ano = self.verificar_años_gravables(año_gravable)
                 if id_expediente[0].upper() not in ['O', 'I', 'S']:
                     raise ValueError("ID del expediente debe empezar por O o I o S")
-                elif not self.verificar_años_gravables(año_gravable):
-                    raise ValueError("los años deben empezar por 20")
+                elif not confirmacion_ano:
+                    raise ValueError(mensaje_ano)
 
                 mensaje , confirmacion = self.expediente.eliminar_expediente_por_ano(id_expediente,año_gravable[0])
 
@@ -617,6 +630,7 @@ class ExpedienteCrud:
         # Verificar si ambas cajas de texto tienen un valor
         if id_expediente and nuevo_id_contribuyente and nuevo_id_auditor and nuevo_id_proceso and nuevo_id_caja and nuevo_estado and año_gravable:
             try:
+                mensaje_ano, confirmacion_ano = self.verificar_años_gravables(año_gravable)
                 if id_expediente[0].upper() not in ['O', 'I', 'S']:
                     raise ValueError("ID del expediente debe empezar por O o I o S")
                 elif nuevo_id_contribuyente[0] not in "0123456789":
@@ -629,8 +643,8 @@ class ExpedienteCrud:
                     raise ValueError("ID caja debe empezar por O o I o S")
                 elif nuevo_estado not in ["activo","auto archivo"]:
                     raise ValueError("el estado debe ser activo o auto archivo")
-                elif not self.verificar_años_gravables(año_gravable):
-                    raise ValueError("los años deben empezar por 20")
+                elif not confirmacion_ano:
+                    raise ValueError(mensaje_ano)
 
                 mensaje, confirmacion = self.expediente.modificar_datos_expediente(id_expediente, nuevo_id_contribuyente,
                                                                                    nuevo_id_auditor,nuevo_id_proceso,

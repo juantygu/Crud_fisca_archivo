@@ -24,6 +24,8 @@ class ContribuyenteCrud:
         self.consultas_contribuyente = ConsultasContribuyente()
         self.contribuyente = Contribuyente()
         self.elementos.ventana_credenciales_abierta = False
+        self.altura_pantalla = self.interfaz.window_height
+        self.ancho_pantalla = self.interfaz.window_width
 
     def mostrar_contribuyente_crud(self):
         """
@@ -49,38 +51,38 @@ class ContribuyenteCrud:
             self.elementos.label_frame.place(x=55, y=100, width=500, height=300)
 
             # =====ETIQUETA ID_Contribuyente ======
-            self.elementos.label_id_contribuyente = tk.Label(self.elementos.label_frame, text="ID_contribuyente", font=("Arial", 14, "bold"),
+            self.elementos.label_id_contribuyente = tk.Label(self.elementos.label_frame, text="ID_contribuyente", font=("Arial", 12, "bold"),
                                                fg="black", bg="#E6F7FF")
-            self.elementos.label_id_contribuyente.place(x=45, y=30)
+            self.elementos.label_id_contribuyente.place(x=20, y=30)
 
             # =====CAJA ID_Contribuyente =========
             self.elementos.box_id_contribuyente = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.id_variable_contribuyente, bd=3,
                                              font=("Arial", 12), width=15, insertbackground="blue", selectbackground="blue",
                                              relief=tk.RIDGE)
-            self.elementos.box_id_contribuyente.place(x=145, y=30)
+            self.elementos.box_id_contribuyente.place(x=160, y=30)
             self.elementos.box_id_contribuyente.delete(0, tk.END)  # Borra el contenido actual de la caja de texto self.box_id
 
             # ==== ETIQUETA TIPO ====
-            self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 14, "bold"),
+            self.elementos.label_tipo = tk.Label(self.elementos.label_frame, text="Tipo", font=("Arial", 12, "bold"),
                                                    fg="black", bg="#E6F7FF")
-            self.elementos.label_tipo.place(x=45, y=60)
+            self.elementos.label_tipo.place(x=20, y=60)
 
             # =======combo box tipo=====
             self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
-                                                   width=15)
-            self.elementos.box_tipo.place(x=145, y=60)
+                                                   width=12)
+            self.elementos.box_tipo.place(x=161, y=60)
 
             # ===== ETIQUETA NOMBRE ======
-            self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 15, "bold"),
+            self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 12, "bold"),
                                                    fg="black", bg="#E6F7FF")
-            self.elementos.label_nombre.place(x=45, y=90)
+            self.elementos.label_nombre.place(x=20, y=90)
 
             # ====== CAJA NOMBRE ======
             self.elementos.box_nombre = tk.Entry(self.elementos.label_frame, textvariable=self.elementos.nombre_variable,
                                                  bd=3, font=("Arial", 12), width=35, insertbackground="blue",
                                                  selectbackground="blue", relief=tk.RIDGE)
-            self.elementos.box_nombre.place(x=145, y=90)
+            self.elementos.box_nombre.place(x=160, y=90)
             self.elementos.box_nombre.delete(0,tk.END)  # Borra el contenido actual de la caja de texto self.elementos.box_nombre
             # ====== BOTON GUARDAR =====
             self.elementos.boton_insertar = tk.Button(self.elementos.label_frame, text="Insertar", font=("Arial", 12, "bold"),
@@ -109,29 +111,55 @@ class ContribuyenteCrud:
 
             # ======BOTON CAMBIAR ID =========
 
-            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_auditor",
+            self.elementos.boton_cambiar_id = tk.Button(self.ventana_principal, text="Cambiar ID_contribuyente",
                                                       font=("Arial", 12, "bold"), fg="black", bg="red", bd=4,
-                                                      relief=tk.GROOVE, width=15, height=1, activebackground='blue',
+                                                      relief=tk.GROOVE, width=20, height=1, activebackground='blue',
                                                       command=self.crear_ventana_credenciales_cambiar_id_contribuyente)
             self.elementos.boton_cambiar_id.place(x=55,y=450)
+
+            # ========= BUSQUEDA POR ID_CONTRIBUYENTE =================
+            # ETIQUETA BUSQUEDA
+            self.elementos.label_busqueda_id_contribuyente = tk.Label(self.ventana_principal,
+                                                                      text="BUSQUEDA POR ID_CONTRIBUYENTE",
+                                                                      font=("Arial", 11, "bold"),
+                                                                      fg="black", bg="#E6F7FF")
+            self.elementos.label_busqueda_id_contribuyente.place(x=((self.ancho_pantalla / 2) - 70), y=100)
+            # BOX ID_CONTRIBUYENTE BUSQUEDA
+            self.elementos.box_busqueda_id_contribuyente = tk.Entry(self.ventana_principal,
+                                                                    textvariable=self.elementos.busqueda_id_contribuyente_variable,
+                                                                    bd=1,
+                                                                    font=("Arial", 10), width=12,
+                                                                    insertbackground="blue",
+                                                                    selectbackground="blue",
+                                                                    relief=tk.SOLID)
+            self.elementos.box_busqueda_id_contribuyente.place(x=((self.ancho_pantalla / 2) - 70), y=130)
+            self.elementos.box_busqueda_id_contribuyente.delete(0, tk.END)
+            # BOTON BUSCAR
+            self.elementos.boton_buscar = tk.Button(self.ventana_principal, text="BUSCAR",
+                                                    font=("Arial", 10, "bold"), fg="black", bg="white",
+                                                    bd=3,
+                                                    relief=tk.GROOVE, width=7, height=1,
+                                                    activebackground='blue',
+                                                    command=self.busqueda_por_id_contribuyente)
+            self.elementos.boton_buscar.place(x=((self.ancho_pantalla / 2) + 35), y=125)
 
             # ===== TABLA ======
             # Crear Treeview
 
             style = ttk.Style()
             style.theme_use("alt")
-            style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
+            style.configure('Treeview.Heading', font=('Arial', 11, 'bold'))
             style.configure('Treeview', font=('Arial', 12))
 
-            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_CONTRIBUYENTE', 'NOMBRE', 'TIPO'), show='headings',height=20)
+            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_CONTRIBUYENTE', 'NOMBRE', 'TIPO'), show='headings',height=15)
             self.elementos.tree.heading('ID_CONTRIBUYENTE', text='ID_CONTRIBUYENTE')
-            self.elementos.tree.column('ID_CONTRIBUYENTE', width=110, anchor='center')
+            self.elementos.tree.column('ID_CONTRIBUYENTE', width=160, anchor='center')
             self.elementos.tree.heading('NOMBRE', text='NOMBRE')
             self.elementos.tree.column('NOMBRE', width=430, anchor='center')
             self.elementos.tree.heading('TIPO', text='TIPO')
             self.elementos.tree.column('TIPO', width=100, anchor='center')
 
-            self.elementos.tree.place(x=((ancho_pantalla/2)-30), y=110)
+            self.elementos.tree.place(x=((ancho_pantalla/2)-70), y=180)
             #  =======MOSTRAR DATOS  ===========
             self.actualizar_tree_contribuyente()
             # Enlace del evento para seleccionar registros
@@ -210,6 +238,50 @@ class ContribuyenteCrud:
         self.elementos.box_id_contribuyente.delete(0, tk.END)
         self.elementos.box_tipo.delete(0, tk.END)
         self.elementos.box_nombre.delete(0, tk.END)
+        self.elementos.box_busqueda_id_contribuyente.delete(0, tk.END)
+
+    def busqueda_por_id_contribuyente(self):
+        """
+                        Método para buscar por id_contribuyente.
+                        """
+        id_contribuyente = self.elementos.box_busqueda_id_contribuyente.get().strip()
+
+        if id_contribuyente:
+            try:
+                if id_contribuyente[0] not in "0123456789":
+                    raise ValueError("ID del contribuyente debe comenzar con un numero.")
+                mensaje, contribuyentes = self.consultas_contribuyente.obtener_contribuyente(id_contribuyente=id_contribuyente)
+
+                if contribuyentes:
+                    print(mensaje)
+                    try:
+                        # actualizamos los campos del tree
+                        self.elementos.tree.delete(*self.elementos.tree.get_children())
+
+                        # insertar lo nuevos datos  en el tree
+                        # mostrar datos en la tabla
+                        for row in contribuyentes:
+                            self.elementos.tree.insert("", "end", values=row)
+                    except Exception as update_error:
+                        messagebox.showerror("Error", f"Error al actualizar la tabla: {update_error}")
+                        print(f"Error al actualizar la tabla: {update_error}")
+                else:
+                    messagebox.showinfo("INFORMACIÓN", mensaje)
+                    print(mensaje)
+            except ValueError as error:
+                if "ID del contribuyente debe comenzar con un numero." in str(error):
+
+                    messagebox.showerror("Error", "ID del contribuyente debe comenzar con un numero.")
+                    # Borrar el contenido de la caja de texto id_auditor
+
+                # Verificar si el error es debido a la conexión a la base de datos
+                elif "Error al conectar a la base de datos" in str(error):
+                    messagebox.showerror("Error de conexión", "No se pudo conectar a la base de datos.")
+                else:
+                    messagebox.showerror("Error", str(error))
+                   #print(f"fError al actualizar tabla : {error}")
+        else:
+            messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
     def insertar_contribuyente(self):
         """

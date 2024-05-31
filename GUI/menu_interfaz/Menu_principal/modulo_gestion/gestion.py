@@ -6,6 +6,7 @@ from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import Auditor
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.proceso_crud import ProcesoCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.expediente_crud import ExpedienteCrud
+from GUI.menu_interfaz.Menu_principal.modulo_gestion.prestamo_crud import PrestamoCrud
 
 
 class Gestion:
@@ -102,7 +103,7 @@ class Gestion:
         #=====BOTON PRESTAMO=====
         self.elementos.boton_prestamo = tk.Button(self.ventana_principal, text="Prestamo", font=("Arial", 20, "bold"),
                                                  fg="black", bg="white", bd=4, relief=tk.GROOVE, width=300, height=150,
-                                                 command=self.on_boton_auditor)
+                                                 command=self.on_boton_prestamo)
         self.elementos.boton_prestamo.place(x=posicion_x2[1], y=posicion_y_fila2)
         self.elementos.imagen_prestamo = PhotoImage(file="D:\pythonProject\Crud_fisca_archivo\imagenes\prestamo.png")
         self.elementos.imagen_prestamo = self.elementos.imagen_prestamo.subsample(
@@ -168,6 +169,21 @@ class Gestion:
         self.interfaz.borrar_estado_anterior("gestion")
         expediente_crud = ExpedienteCrud(self.ventana_principal, self.elementos, self.interfaz)
         expediente_crud.mostrar_expediente_crud()
+
+    def on_boton_prestamo(self):
+        """
+                                        Maneja el evento de clic en el botón "Prestamo".
+
+                                        Parameters:
+                                        - None
+
+                                        Returns:
+                                        - None
+                                        """
+        self.interfaz.borrar_estado_anterior("gestion")
+        prestamo_crud = PrestamoCrud(self.ventana_principal, self.elementos, self.interfaz)
+        prestamo_crud.mostrar_prestamo_crud()
+
 
 
 
