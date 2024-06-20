@@ -6,6 +6,7 @@ from tkinter import ttk
 from entidades.auditor import *
 from GUI.elementos import Elementos
 from GUI.menu_interfaz.Menu_principal.menu_principal import MenuPrincipal
+from GUI.menu_interfaz.Menu_principal.modulo_consultas.menu_consultas import MenuConsultas
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.gestion import Gestion
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.auditor_crud import AuditorCrud
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.contribuyente_crud import ContribuyenteCrud
@@ -205,14 +206,29 @@ class Interfaz():
         """
                 Maneja el evento de retroceso en la interfaz.
         """
-        # =======ESTADOS MENU PRINCIPAL===========
-        if self.estado_actual == "consulta": # si esta en el estado consulta
-            self.borrar_estado_anterior("consulta") # borra el estado consulta
+        # =======ESTADOS MENU CONSULTAS===========
+        if self.estado_actual == "Menu_consultas": # si esta en el estado consulta
+            self.borrar_estado_anterior("Menu_consultas") # borra el estado consulta
 
             # Crear instancia de MenuPrincipal y mostrar el menú principal
             menu_principal = MenuPrincipal(self.ventana_principal, self.elementos, self)
             menu_principal.mostrar_menu_principal()
 
+        if self.estado_actual == "Consultas_prestamos_activos":
+            self.borrar_estado_anterior("Consultas_prestamos_activos")
+
+            # CREAR INTENCIA DE MENU CONSULTAS MOSTRAS MENU CONSULTAS
+            menu_consultas = MenuConsultas(self.ventana_principal, self.elementos, self)
+            menu_consultas.mostrar_menu_consultas()
+
+        if self.estado_actual == "Consultas_general":
+            self.borrar_estado_anterior("Consultas_general")
+
+            # CREAR INTENCIA DE MENU CONSULTAS MOSTRAS MENU CONSULTAS
+            menu_consultas = MenuConsultas(self.ventana_principal, self.elementos, self)
+            menu_consultas.mostrar_menu_consultas()
+
+        # ======== ESTADOS MODULO GESTION ========
         if self.estado_actual == "gestion":
             self.borrar_estado_anterior("gestion")
 
@@ -222,8 +238,6 @@ class Interfaz():
 
         if self.estado_actual == "inventario grafico":
             print("inventario grafico")
-
-        # ======== ESTADOS MODULO GESTION ========
 
         # ======== AUDITOR CRUD ===============
         if self.estado_actual == "gestion_auditor_crud":
@@ -298,9 +312,28 @@ class Interfaz():
             self.elementos.boton_consultar.destroy()
             self.elementos.boton_gestion.destroy()
             self.elementos.boton_inventario.destroy()
-        if estado_anterior == "consulta":
+        if estado_anterior == "Menu_consultas":
             self.elementos.label_titulo.destroy()
             self.elementos.boton_atras.destroy()
+            self.elementos.boton_consulta_prestamo.destroy()
+            self.elementos.boton_consulta_general.destroy()
+        if estado_anterior == "Consultas_prestamos_activos":
+            self.elementos.label_titulo.destroy()
+            self.elementos.boton_atras.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.barra_desplazamiento_v.destroy()
+            self.elementos.boton_buscar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
+        if estado_anterior == "Consultas_general":
+            self.elementos.label_titulo.destroy()
+            self.elementos.boton_atras.destroy()
+            self.elementos.label_frame.destroy()
+            self.elementos.tree.destroy()
+            self.elementos.barra_desplazamiento_v.destroy()
+            self.elementos.boton_buscar.destroy()
+            self.elementos.boton_limpiar_cajas.destroy()
+
         if estado_anterior == "gestion":
             self.elementos.label_titulo.destroy()
             self.elementos.boton_expediente.destroy()
@@ -493,7 +526,6 @@ class Interfaz():
             self.estado_actual = "gestion_expediente_crud"
             self.elementos.ventana_credenciales_abierta = False
             print(self.estado_actual)
-
         if estado_anterior == "gestion_prestamo_crud":
             self.elementos.label_titulo.destroy()
             self.elementos.label_frame.destroy()
@@ -514,20 +546,7 @@ class Interfaz():
             self.elementos.barra_desplazamiento_v.destroy()
             self.elementos.tree.destroy()
             self.elementos.barra_desplazamiento_v.destroy()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            self.elementos.boton_atras.destroy()
 
 
     # ============== FUNCIONES CRUD AUDITOR =====================

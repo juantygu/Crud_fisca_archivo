@@ -341,8 +341,8 @@ class ConsultasPrestamo:
                 return "Formato de fecha inválido", False
 
 
-#consulta = ConsultasPrestamo()
-#result= consulta.buscar_por_fecha_entrega(fecha_inicio="2024-05-29",fecha_fin="2024-03-29")
+consulta = ConsultasPrestamo()
+#result= consulta.buscar_por_fecha_entrega(fecha_inicio="2024-02-13",fecha_fin="2024-02-29")
 #result= consulta.buscar_por_fecha_devolucion(fecha_inicio="2024-05-29",fecha_fin="2024-03-29")
 #result= consulta.mostrar_prestamos()
 #result = consulta.buscar_por_responsable_area(area="fiscalizacion")

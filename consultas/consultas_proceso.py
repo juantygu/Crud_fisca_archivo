@@ -151,8 +151,8 @@ class ConsultasProceso:
                 # Cerrar la conexión
                 self.connector.close_connection()
 
-#consultas = ConsultasProceso()
-#procesoo = consultas.obtener_proceso(id_proceso="3",nombre_proceso="sancionatorio")
+#modulo_consultas = ConsultasProceso()
+#procesoo = modulo_consultas.obtener_proceso(id_proceso="3",nombre_proceso="sancionatorio")
 #print(procesoo)
-#procesoss = consultas.mostrar_procesos()
+#procesoss = modulo_consultas.mostrar_procesos()
 #print(procesoss[1])

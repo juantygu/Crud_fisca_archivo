@@ -8,7 +8,7 @@ class BDConnector:
 
     Attributes:
         connection: La conexión a la base de datos MySQL.
-        cursor: El cursor utilizado para ejecutar consultas SQL.
+        cursor: El cursor utilizado para ejecutar modulo_consultas SQL.
         in_transaction: Un indicador del estado de la transacción actual.
     """
     def __init__(self): # que sirve como una interfaz para conectar y realizar operaciones en la base de datos.

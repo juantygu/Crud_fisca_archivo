@@ -50,7 +50,7 @@ class PrestamoCrud:
 
             dic_procesos = self.obtener_procesos()  # Obtener el diccionario de procesos
             if dic_procesos:
-                #lista_nombres_procesos = list(dic_procesos.keys())  # Obtener solo los nombres de los procesos
+
                 lista_nombres_procesos = [f"{k}: {v}" for k, v in dic_procesos.items()]
             else:
                 raise ValueError("error al obtener los procesos.")
@@ -620,6 +620,7 @@ class PrestamoCrud:
                 if confirmacion_prestamo:
                     print(mensaje_prestamo)
                     mensaje_ultimo_prestamo , ultimo_prestamo = self.consultas_prestamo.obtener_ultimo_prestamo()
+
 
                     if ultimo_prestamo:
                         id_prestamo = ultimo_prestamo[0][0]

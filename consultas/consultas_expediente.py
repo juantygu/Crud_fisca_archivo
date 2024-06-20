@@ -514,17 +514,17 @@ class ConsultasExpediente:
 
 
 consultas = ConsultasExpediente()
-#result = consultas.buscar_por_id_expediente("i010")
-#result = consultas.buscar_por_id_contribuyente("020"
-#result = consultas.buscar_por_id_auditor("A025")
-#result = consultas.buscar_por_id_proceso("1")
-#result = consultas.buscar_expedientes_prestados()
-#result = consultas.buscar_por_id_caja("o111")
-#result = consultas.buscar_por_estado("activo")
-#result = consultas.buscar_por_año_gravable("2019")
-#result = consultas.mostrar_expedientes()
-#result = consultas.obtener_ultimo_expediente()
-#mensaje, resultados = consultas.buscar_y_verificar_expedientes(["700"],2)
+#result = modulo_consultas.buscar_por_id_expediente("i010")
+#result = modulo_consultas.buscar_por_id_contribuyente("020"
+#result = modulo_consultas.buscar_por_id_auditor("A025")
+#result = modulo_consultas.buscar_por_id_proceso("1")
+#result = modulo_consultas.buscar_expedientes_prestados()
+#result = modulo_consultas.buscar_por_id_caja("o111")
+#result = modulo_consultas.buscar_por_estado("activo")
+#result = modulo_consultas.buscar_por_año_gravable("2019")
+#result = modulo_consultas.mostrar_expedientes()
+#result = modulo_consultas.obtener_ultimo_expediente()
+#mensaje, resultados = modulo_consultas.buscar_y_verificar_expedientes(["700"],2)
 #print(resultados["exp encontrados"])
 #print(resultados["ids encontrados"])
 #print(resultados["ids no_encontrados"])

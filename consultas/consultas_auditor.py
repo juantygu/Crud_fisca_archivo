@@ -1,7 +1,7 @@
 from data_base.db_connector import BDConnector
 import mysql.connector
 
-class ConsultasAuditor: # define la logica de las consultas a la entidad auditor
+class ConsultasAuditor: # define la logica de las modulo_consultas a la entidad auditor
 
     def __init__(self):
         self.connector = None

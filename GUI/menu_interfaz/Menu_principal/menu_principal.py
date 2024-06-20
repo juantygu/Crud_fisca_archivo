@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import PhotoImage
-from GUI.menu_interfaz.Menu_principal.consultar import Consultar
+from GUI.menu_interfaz.Menu_principal.modulo_consultas.menu_consultas import MenuConsultas
 from GUI.menu_interfaz.Menu_principal.modulo_gestion.gestion import Gestion
 
 
@@ -83,8 +83,8 @@ class MenuPrincipal():
                 - None
                 """
         self.interfaz.borrar_estado_anterior("menu principal")
-        consultar = Consultar(self.ventana_principal, self.elementos, self.interfaz)
-        consultar.mostrar_consultar()
+        menu_consultas = MenuConsultas(self.ventana_principal, self.elementos, self.interfaz)
+        menu_consultas.mostrar_menu_consultas()
 
     def on_boton_gestion(self):
         """

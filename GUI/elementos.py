@@ -13,6 +13,7 @@ class Elementos:
         self.variables_crud()
         self.variables_inicio()
         self.ventanas_emergentes()
+        self.elementos_menu_consultas()
 
     def elementos_inicio(self):
 
@@ -37,6 +38,12 @@ class Elementos:
         self.boton_inventario = None
         self.imagen_inventario = None
         self.boton_atras = None
+
+    def elementos_menu_consultas(self):
+        self.boton_consulta_prestamo = None
+        self.imagen_consulta_prestamo = None
+        self.boton_consulta_general = None
+        self.imagen_consulta_general = None
 
     def elementos_consultar(self):
         self.boton_nombre = None
@@ -105,7 +112,9 @@ class Elementos:
         # ====== PRESTAMO CRUD =========
         self.label_id_prestamo = None
         self.label_fecha_entrega = None
+        self.label_fecha_entrega_1 = None
         self.label_fecha_devolucion = None
+        self.label_fecha_devolucion1 = None
         self.label_responsable = None
         self.label_area = None
         self.label_ids_encontrados = None
@@ -115,7 +124,9 @@ class Elementos:
 
         self.box_id_prestamo = None
         self.box_fecha_entrega = None
+        self.box_fecha_entrega1 = None
         self.box_fecha_devolucion = None
+        self.box_fecha_devolucion1 = None
         self.box_responsable = None
         self.box_area = None
         self.text_busqueda_id_expediente_1 = None

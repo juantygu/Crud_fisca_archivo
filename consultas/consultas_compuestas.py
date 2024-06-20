@@ -358,6 +358,7 @@ class ConsultasCompuestas():
                             - 'nombre_proceso': Nombre del proceso.
                             - 'estado': Estado del expediente.
                             - 'año_gravable': Año gravable del expediente.
+                            - 'id_prestamo': ID del préstamo.
 
         Returns:
             tuple: Una tupla que contiene el mensaje de estado, los encabezados y los datos de los expedientes encontrados.
@@ -369,18 +370,151 @@ class ConsultasCompuestas():
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT auditor.nombre_auditor, contribuyente.nombre_contribuyente, expediente.id_contribuyente, " \
-                    "contribuyente.tipo,procesos.nombre_proceso, expediente.id_expediente, expediente.id_prestamo, " \
+            query = "SELECT  contribuyente.nombre_contribuyente, expediente.id_contribuyente, " \
+                    "contribuyente.tipo, auditor.nombre_auditor, procesos.nombre_proceso, expediente.id_expediente, expediente.id_prestamo, " \
                     "expediente.id_caja, expediente.estado, expediente.año_gravable " \
                     "FROM expediente " \
                     "INNER JOIN auditor ON expediente.id_auditor = auditor.id_auditor " \
                     "INNER JOIN contribuyente ON expediente.id_contribuyente = contribuyente.id_contribuyente " \
-                    "INNER JOIN procesos ON expediente.id_proceso = procesos.id_proceso"
+                    "INNER JOIN procesos ON expediente.id_proceso = procesos.id_proceso "
+
 
             conditions = []
             values = []
 
             # Construir las condiciones de filtro basadas en los filtros proporcionados
+            if 'nombre_auditor' in filtros and filtros['nombre_auditor']:
+                conditions.append("auditor.nombre_auditor = %s")
+                values.append(filtros['nombre_auditor'])
+            if 'id_expediente' in filtros and filtros['id_expediente']:
+                conditions.append("expediente.id_expediente = %s")
+                values.append(filtros['id_expediente'])
+            if 'id_contribuyente' in filtros and filtros['id_contribuyente']:
+                conditions.append("expediente.id_contribuyente = %s")
+                values.append(filtros['id_contribuyente'])
+            if 'nombre_contribuyente' in filtros and filtros['nombre_contribuyente']:
+                conditions.append("contribuyente.nombre_contribuyente = %s")
+                values.append(filtros['nombre_contribuyente'])
+            if 'tipo_contribuyente' in filtros and filtros['tipo_contribuyente']:
+                conditions.append("contribuyente.tipo = %s")
+                values.append(filtros['tipo_contribuyente'])
+            if 'estado' in filtros and filtros['estado']:
+                conditions.append("expediente.estado = %s")
+                values.append(filtros['estado'])
+            if 'año_gravable' in filtros and filtros['año_gravable']:
+                conditions.append("expediente.año_gravable = %s")
+                values.append(filtros['año_gravable'])
+            if 'id_prestamo' in filtros and filtros['id_prestamo']:
+                conditions.append("expediente.id_prestamo = %s")
+                values.append(filtros['id_prestamo'])
+            if 'id_caja' in filtros and filtros['id_caja']:
+                conditions.append("expediente.id_caja = %s")
+                values.append(filtros['id_caja'])
+            if 'id_proceso' in filtros and filtros['id_proceso']:
+                conditions.append("expediente.id_proceso = %s")
+                values.append(filtros['id_proceso'])
+
+
+
+            # Combinar las condiciones con el operador AND si hay más de una
+            if len(conditions) > 1:
+                query += " WHERE " + " AND ".join(conditions)
+            elif len(conditions) == 1:
+                query += " WHERE " + conditions[0]
+
+            # Ejecutar la consulta
+            self.connector.execute_query(query, values)
+
+            print(query)
+
+            # Obtener resultados y encabezados
+            encabezados = [i[0] for i in self.connector.cursor.description]
+
+            # Obtener los resultados
+            expedientes = self.connector.fetch_all()
+
+            if expedientes:
+                print("Muestra de expedientes exitosa")
+                return "Muestra de expedientes exitosa", encabezados, expedientes, True
+            else:
+                print("No se encontraron datos de expedientes")
+                return "No se encontraron datos de expedientes ", None, None, False
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return "Error de interfaz ", None, None, False
+        except mysql.connector.DatabaseError as db_err:
+            print(f"Error de la base de datos: {db_err}")
+            return "Error de la base de datos", None, None, False
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return "Error de MySQL", None, None, False
+        except Exception as e:
+            print(f"Error al obtener datos del expediente: {e}")
+            return "Error al obtener datos del expediente", None, None, False
+        finally:
+            if self.connector:
+                self.connector.close_connection()
+
+    def buscar_prestamos_filtrados(self,filtros):
+
+        """
+                Busca expedientes filtrados según los criterios especificados en los filtros.
+
+                Args:
+                    filtros (dict): Un diccionario que contiene los filtros a aplicar.
+                                    Los filtros pueden incluir:
+                                    - 'id_prestamo': id del prestamo.
+                                    - 'fecha_entrega': fecha de la entrega del prestamo.
+                                    - 'fecha de devolucion': Fecha de devolucion del prestamo.
+                                    - 'responsable': responsable del prestamo.
+                                    - 'area': area donde se hizo el prestamo.
+                Returns:
+                    tuple: Una tupla que contiene el mensaje de estado, los encabezados y los datos de los prestamo encontrados.
+                           Si se encontraron prestamo, el mensaje de estado será "Muestra de prestamos exitosa",
+                           de lo contrario, será "No se encontraron datos de prestamos".
+                           Los encabezados son los nombres de las columnas de la tabla de prestamos y otras.
+                           Los datos de los prestamos son una lista de tuplas, donde cada tupla representa una fila de datos.
+                           En caso de error, se devuelve None para todos los valores de retorno.
+                """
+        try:
+
+            self.connector = BDConnector()
+            query = "SELECT  contribuyente.nombre_contribuyente, expediente.id_contribuyente, auditor.nombre_auditor, " \
+                    "contribuyente.tipo,procesos.nombre_proceso, expediente.id_expediente, " \
+                    "expediente.id_caja, expediente.estado, expediente.año_gravable, expediente.id_prestamo, " \
+                    "prestamo.fecha_entrega, prestamo.fecha_devolucion, prestamo.responsable, prestamo.area " \
+                    "FROM expediente " \
+                    "INNER JOIN auditor ON expediente.id_auditor = auditor.id_auditor " \
+                    "INNER JOIN contribuyente ON expediente.id_contribuyente = contribuyente.id_contribuyente " \
+                    "INNER JOIN procesos ON expediente.id_proceso = procesos.id_proceso " \
+                    "INNER JOIN prestamo ON expediente.id_prestamo = prestamo.id_prestamo "
+
+            conditions = []
+            values = []
+
+            # Construir las condiciones de filtro basadas en los filtros proporcionados
+            if 'id_prestamo' in filtros and filtros['id_prestamo']:
+                conditions.append("expediente.id_prestamo = %s")
+                values.append(filtros['id_prestamo'])
+
+
+            if 'fecha_entrega_inicio' in filtros and filtros['fecha_entrega_inicio']:
+                conditions.append("prestamo.fecha_entrega >= %s")
+                values.append(filtros['fecha_entrega_inicio'])
+            if 'fecha_entrega_fin' in filtros and filtros['fecha_entrega_fin']:
+                conditions.append("prestamo.fecha_entrega <= %s")
+                values.append(filtros['fecha_entrega_fin'])
+
+            if 'fecha_devolucion_inicio' in filtros and filtros['fecha_devolucion_inicio']:
+                conditions.append("prestamo.fecha_devolucion >= %s")
+                values.append(filtros['fecha_devolucion_inicio'])
+            if 'fecha_devolucion_fin' in filtros and filtros['fecha_devolucion_fin']:
+                conditions.append("prestamo.fecha_devolucion <= %s")
+                values.append(filtros['fecha_devolucion_fin'])
+            if 'area' in filtros and filtros['area']:
+                conditions.append("prestamo.area = %s")
+                values.append(filtros['area'])
             if 'nombre_auditor' in filtros and filtros['nombre_auditor']:
                 conditions.append("auditor.nombre_auditor = %s")
                 values.append(filtros['nombre_auditor'])
@@ -412,7 +546,7 @@ class ConsultasCompuestas():
             # Ejecutar la consulta
             self.connector.execute_query(query, values)
 
-            print (query)
+            print(query)
 
             # Obtener resultados y encabezados
             encabezados = [i[0] for i in self.connector.cursor.description]
@@ -422,27 +556,26 @@ class ConsultasCompuestas():
 
             if expedientes:
                 print("Muestra de expedientes exitosa")
-                return "Muestra de expedientes exitosa", encabezados, expedientes
+                return "Muestra de expedientes exitosa", encabezados, expedientes, True
             else:
                 print("No se encontraron datos de expedientes")
-                return "No se encontraron datos de expedientes ", None, None
+                return "No se encontraron datos de expedientes ", None, None, False
 
         except mysql.connector.InterfaceError as interface_err:
             print(f"Error de interfaz con MySQL: {interface_err}")
-            return "Error de interfaz ", None, None
+            return "Error de interfaz ", None, None, False
         except mysql.connector.DatabaseError as db_err:
             print(f"Error de la base de datos: {db_err}")
-            return "Error de la base de datos", None, None
+            return "Error de la base de datos", None, None, False
         except mysql.connector.Error as mysql_err:
             print(f"Error de MySQL: {mysql_err}")
-            return "Error de MySQL", None, None
+            return "Error de MySQL", None, None, False
         except Exception as e:
             print(f"Error al obtener datos del auditor: {e}")
-            return "Error al obtener datos del auditor", None, None
+            return "Error al obtener datos del auditor", None, None, False
         finally:
             if self.connector:
                 self.connector.close_connection()
-
     def imprimir_resultados(self, resultado):
         """
                 Imprime los resultados de la consulta en forma tabular.
@@ -460,11 +593,10 @@ class ConsultasCompuestas():
             print("Resultado vacío")
 
 
-
 consulta = ConsultasCompuestas()
 
 # Inicia el temporizador
-start_time = time.time()
+#start_time = time.time()
 
 #result = consulta.buscar_expedientes_por_auditor(nombre_auditor="luis",id_auditor="A001")
 #result = consulta.buscar_expedientes_por_contribuyente(id_contribuyente="004", nombre_contribuyente="vcd s.a.s")
@@ -481,13 +613,14 @@ start_time = time.time()
     #'estado': 'auto archivo',
     #'año_gravable': 2019
 #}
-#filtross = {'nombre_auditor': 'jorge'}
-#result = consulta.buscar_expedientes_filtrados(filtross)
+
+#filtros = {'fecha_entrega_inicio': '2024-06-04','fecha_entrega_fin': '2024-06-04'}
+#filtros = {'id_contribuyente': '600'}
+#result = consulta.buscar_expedientes_filtrados(filtros)
 #print(result)
 
 # Detiene el temporizador y calcula el tiempo transcurrido
 #elapsed_time = time.time() - start_time
-
 #consulta.imprimir_resultados(result)
 
 # Imprime el tiempo transcurrido
