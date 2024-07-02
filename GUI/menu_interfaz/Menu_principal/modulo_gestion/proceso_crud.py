@@ -144,12 +144,16 @@ class ProcesoCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            procesos = self.consultas_proceso.mostrar_procesos()
+            mensaje, procesos = self.consultas_proceso.mostrar_procesos()
             #print(contribuyentes)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in procesos[1]:
-                self.elementos.tree.insert("", "end", values=row)
+            if procesos:
+                for row in procesos:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla procesos esta vacia")
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 

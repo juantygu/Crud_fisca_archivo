@@ -33,7 +33,7 @@ class ContribuyenteCrud:
                 """
         self.interfaz.estado_actual = "gestion_contribuyente_crud"
         print(self.interfaz.estado_actual)
-        opciones_tipo = ["Natural", "Jurídico"]
+        opciones_tipo = ["NATURAL", "JURIDICA"]
 
         try:
             altura_pantalla = self.interfaz.window_height
@@ -68,7 +68,7 @@ class ContribuyenteCrud:
             self.elementos.label_tipo.place(x=20, y=60)
 
             # =======combo box tipo=====
-            self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo, state="readonly",
+            self.elementos.box_tipo = ttk.Combobox(self.elementos.label_frame, values=opciones_tipo,
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
                                                    width=12)
             self.elementos.box_tipo.place(x=161, y=60)
@@ -186,12 +186,16 @@ class ContribuyenteCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            contribuyentes = self.consultas_contribuyente.obtener_ultimo_contribuyente()
+            mensaje, contribuyentes = self.consultas_contribuyente.obtener_ultimo_contribuyente()
             #print(contribuyentes)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in contribuyentes[1]:
-                self.elementos.tree.insert("", "end", values=row)
+            if contribuyentes:
+                for row in contribuyentes:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError ("La tabla contribuyentes esta vacia")
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 
@@ -295,8 +299,8 @@ class ContribuyenteCrud:
                 # Convertir id_auditor a cadena y verificar que contenga solo números
                 if id_contribuyente[0] not in "0123456789":
                     raise ValueError("ID del contribuyente debe comenzar con un numero.")
-                elif tipo_contribuyente not in ["Natural", "Jurídico"]:
-                    raise ValueError("El tipo de contribuyente debe ser 'Natural' o 'Jurídico'.")
+                elif tipo_contribuyente not in ["NATURAL", "JURIDICA"]:
+                    raise ValueError("El tipo de contribuyente debe ser 'NATURAL' o 'JURIDICA'.")
 
                 mensaje, confirmacion = self.contribuyente.insertar_contribuyente(id_contribuyente, nombre_contribuyente, tipo_contribuyente)
 
@@ -379,8 +383,8 @@ class ContribuyenteCrud:
                 # Convertir id_auditor a cadena y verificar que contenga solo números
                 if id_contribuyente[0] not in "0123456789":
                     raise ValueError("ID del contribuyente debe comenzar con un numero.")
-                elif nuevo_tipo_contribuyente not in ["Natural", "Jurídico"]:
-                    raise ValueError("El tipo de contribuyente debe ser 'Natural' o 'Jurídico'.")
+                elif nuevo_tipo_contribuyente not in ["NATURAL", "JURIDICA"]:
+                    raise ValueError("El tipo de contribuyente debe ser 'NATURAL' o 'JURIDICA'.")
 
                 mensaje, confirmacion = self.contribuyente.modificar_datos_contribuyente(id_contribuyente, nuevo_nombre_contribuyente,nuevo_tipo_contribuyente)
 

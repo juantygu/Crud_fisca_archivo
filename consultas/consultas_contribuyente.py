@@ -199,7 +199,7 @@ class ConsultasContribuyente:
             if self.connector:
                 self.connector.close_connection()
 
-#consulta = ConsultasContribuyente()
+consulta = ConsultasContribuyente()
 #contribuyentes = consulta.mostrar_contribuyentes()
 #print(contribuyentes[1])
 #contribuyente = consulta.obtener_contribuyente()

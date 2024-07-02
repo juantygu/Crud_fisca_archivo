@@ -856,6 +856,7 @@ prestamo = Prestamo()
 
 #=========INSERTAR PRESTAMOS ====================
 #prestamo.insertar_prestamo_vinculacion("2024-03-02", "chinga", "tesoreria", ["o009", "o009A"])
+#prestamo.insertar_prestamo("2024-03-02", "chinga", "tesoreria")
 #prestamo.insertar_id_prestamo_expediente(["o009A"],12)
 
 #===========FINALIZAR PRESTAMO=====================
@@ -865,7 +866,7 @@ prestamo = Prestamo()
 #prestamo.modificar_prestamo(1,"2024-02-13", nueva_fecha_devolucion = "2024-02-13",nuevo_responsable="jorgee",nueva_area= "fiscalizacion")
 
 #==============ELIMINAR PRESTAMO =================
-#prestamo.eliminar_registro_prestamo(20)
+#prestamo.eliminar_registro_prestamo(2)
 #prestamo.eliminar_prestamo_con_verificacion(16)
 
 #prestamo.desvincular_prestamo_expediente("14")

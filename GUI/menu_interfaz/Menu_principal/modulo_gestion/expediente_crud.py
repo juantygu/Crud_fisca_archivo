@@ -34,6 +34,8 @@ class ExpedienteCrud:
 
         self.altura_pantalla = self.interfaz.window_height
         self.ancho_pantalla = self.interfaz.window_width
+        self.lista_nombres_auditores = None
+        self.lista_nombres_procesos = None
 
     def mostrar_expediente_crud(self):
         """
@@ -41,20 +43,22 @@ class ExpedienteCrud:
                         """
         self.interfaz.estado_actual = "gestion_expediente_crud"
         print(self.interfaz.estado_actual)
-        opciones_estado = ["activo", "auto archivo"]
+        opciones_estado = ["ACTIVO", "AUTO DE ARCHIVO"]
         try:
             dic_auditores = self.obtener_auditores()  # Obtener el diccionario de auditores
             dic_procesos = self.obtener_procesos() # Obtener el diccionario de procesos
-            self.crear_etiqueta_informacion(dic_auditores, dic_procesos)
+            if dic_auditores and dic_procesos:
 
-            if dic_auditores:
-                lista_nombres_auditores = list(dic_auditores.keys())  # Obtener solo los nombres de los auditores
-            else:
-                raise ValueError("error al obtener los auditores.")
-            if dic_procesos:
-                lista_nombres_procesos = list(dic_procesos.keys())  # Obtener solo los nombres de los procesos
-            else :
-                raise ValueError("error al obtener los procesos.")
+                self.crear_etiqueta_informacion(dic_auditores, dic_procesos)
+
+                if dic_auditores:
+                    self.lista_nombres_auditores = list(dic_auditores.keys())  # Obtener solo los nombres de los auditores
+                else:
+                    raise ValueError("error al obtener los auditores.")
+                if dic_procesos:
+                    self.lista_nombres_procesos = list(dic_procesos.keys())  # Obtener solo los nombres de los procesos
+                else :
+                    raise ValueError("error al obtener los procesos.")
 
             # ==== TITULO ======
             self.elementos.label_titulo = tk.Label(self.ventana_principal, text="GESTIÓN DE EXPEDIENTES",
@@ -105,7 +109,7 @@ class ExpedienteCrud:
 
             # ===== COMBOBOX Auditor =========
             self.elementos.box_id_auditor = ttk.Combobox(self.elementos.label_frame,
-                                                              values=lista_nombres_auditores,
+                                                              values=self.lista_nombres_auditores,
                                                               textvariable=self.elementos.id_variable_auditor,
                                                               font=("Arial", 10),
                                                               width=11, style="EstiloCombobox.TCombobox")
@@ -119,7 +123,7 @@ class ExpedienteCrud:
 
             # ===== COMBOBOX ID_proceso =========
             self.elementos.box_id_proceso = ttk.Combobox(self.elementos.label_frame,
-                                                              values=lista_nombres_procesos,
+                                                              values=self.lista_nombres_procesos,
                                                               textvariable=self.elementos.id_variable_proceso,
                                                               font=("Arial", 10),
                                                               width=11)
@@ -306,49 +310,56 @@ class ExpedienteCrud:
                 messagebox.showerror("Error", "error al obtener los procesos.")
         except Exception as e:
             # Si ocurre algún error, imprime un mensaje de error
-            print("Error al mostrar gestion auditor:", str(e))
+            print("Error al mostrar gestion expediente:", str(e))
 
     def obtener_auditores(self):
-
-        mensaje, auditores = self.auditor.mostrar_nombre_id_auditores()
-        if auditores:
-            #print(mensaje)
-            self.dic_auditores= {auditor[0]: auditor[1] for auditor in auditores}
-            #print(dic_auditores)
-            return self.dic_auditores
-        else:
-            print(mensaje)
-            return None
+        try:
+            mensaje, auditores = self.auditor.mostrar_nombre_id_auditores()
+            if auditores:
+                #print(mensaje)
+                self.dic_auditores= {auditor[0]: auditor[1] for auditor in auditores}
+                #print(dic_auditores)
+                return self.dic_auditores
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla auditores esta vacia")
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
 
     def crear_etiqueta_informacion(self,dic_auditores, dic_procesos):
-        # ====LABEL INFO====
-        self.elementos.label_info = tk.LabelFrame(self.ventana_principal, text="INFORMACIÓN",
-                                                   font=("Arial", 16, "bold"), fg="black", bg="#E6F7FF", bd=5,
-                                                   relief=tk.RIDGE)
-        self.elementos.label_info.place(x=((self.ancho_pantalla / 2)-130), y=415, width=400, height=250)
 
-        # =====INFO AUDITORES =====
-        auditores_texto = "\n".join([f"{id_auditor} = {nombre_auditor}" for id_auditor, nombre_auditor in dic_auditores.items()])
-        self.elementos.label_info_auditores = tk.Label(self.elementos.label_info, text=auditores_texto, font=("Arial", 10, "bold"),bg="#E6F7FF", justify="left")
-        self.elementos.label_info_auditores.place(x=((400/2)-180), y=10)
+        try:
+            # ====LABEL INFO====
+            self.elementos.label_info = tk.LabelFrame(self.ventana_principal, text="INFORMACIÓN",
+                                                       font=("Arial", 16, "bold"), fg="black", bg="#E6F7FF", bd=5,
+                                                       relief=tk.RIDGE)
+            self.elementos.label_info.place(x=((self.ancho_pantalla / 2)-130), y=415, width=400, height=250)
 
-        # =====INFO PROCESOS =====
-        procesos_texto = "\n".join([f"{id_proceso} = {nombre_proceso}" for id_proceso, nombre_proceso in dic_procesos.items()])
-        self.elementos.label_info_procesos = tk.Label(self.elementos.label_info, text=procesos_texto, font=("Arial", 10, "bold"), bg="#E6F7FF", justify="left")
-        self.elementos.label_info_procesos.place(x=((400 / 2) + 10), y=10)
+            # =====INFO AUDITORES =====
+            auditores_texto = "\n".join([f"{id_auditor} = {nombre_auditor}" for id_auditor, nombre_auditor in dic_auditores.items()])
+            self.elementos.label_info_auditores = tk.Label(self.elementos.label_info, text=auditores_texto, font=("Arial", 10, "bold"),bg="#E6F7FF", justify="left")
+            self.elementos.label_info_auditores.place(x=((400/2)-180), y=10)
+
+            # =====INFO PROCESOS =====
+            procesos_texto = "\n".join([f"{id_proceso} = {nombre_proceso}" for id_proceso, nombre_proceso in dic_procesos.items()])
+            self.elementos.label_info_procesos = tk.Label(self.elementos.label_info, text=procesos_texto, font=("Arial", 10, "bold"), bg="#E6F7FF", justify="left")
+            self.elementos.label_info_procesos.place(x=((400 / 2) + 10), y=10)
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
 
     def obtener_procesos(self):
-
-        mensaje, procesos = self.proceso.mostrar_nombre_id_procesos()
-        if procesos:
-            #print(mensaje)
-            self.dic_procesos= {proceso[0]: proceso[1] for proceso in procesos}
-            #print(dic_procesos)
-            return self.dic_procesos
-        else:
-            print(mensaje)
-            return None
-
+        try:
+            mensaje, procesos = self.proceso.mostrar_nombre_id_procesos()
+            if procesos:
+                #print(mensaje)
+                self.dic_procesos= {proceso[0]: proceso[1] for proceso in procesos}
+                #print(dic_procesos)
+                return self.dic_procesos
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla proceos esta vacia")
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
     def busqueda_por_id_contribuyente(self):
         """
                         Método para buscar por id_contribuyente.
@@ -404,12 +415,17 @@ class ExpedienteCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            expedientes = self.consultas_expediente.obtener_ultimo_expediente()
+            mensaje, expedientes = self.consultas_expediente.obtener_ultimo_expediente()
             #print(contribuyentes)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in expedientes[1]:
-                self.elementos.tree.insert("", "end", values=row)
+            if expedientes:
+                for row in expedientes:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla expedientes esta vacia")
+
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 
@@ -530,10 +546,10 @@ class ExpedienteCrud:
                     raise ValueError("ID del auditor debe comenzar con A .")
                 elif id_proceso not in "12345":
                     raise ValueError("id_proceso debe ser un numero.")
-                elif id_caja[0].upper() not in ['O', 'I', 'S']:
-                    raise ValueError("ID caja debe empezar por O o I o S")
-                elif estado not in ["activo","auto archivo"]:
-                    raise ValueError("el estado debe ser activo o auto archivo")
+                elif id_caja[0].upper() not in ['C']:
+                    raise ValueError("ID caja debe empezar por C")
+                elif estado not in ["ACTIVO","AUTO DE ARCHIVO"]:
+                    raise ValueError("el estado debe ser ACTIVO o AUTO DE ARCHIVO")
                 elif not confirmacion_ano:
                     raise ValueError(mensaje_ano)
 
@@ -639,9 +655,9 @@ class ExpedienteCrud:
                     raise ValueError("ID del auditor debe comenzar con A .")
                 elif nuevo_id_proceso not in "12345":
                     raise ValueError("id_proceso debe ser un numero.")
-                elif nuevo_id_caja[0].upper() not in ['O', 'I', 'S']:
-                    raise ValueError("ID caja debe empezar por O o I o S")
-                elif nuevo_estado not in ["activo","auto archivo"]:
+                elif nuevo_id_caja[0].upper() not in ['C']:
+                    raise ValueError("ID caja debe empezar por C")
+                elif nuevo_estado not in ["ACTIVO","AUTO DE ARCHIVO"]:
                     raise ValueError("el estado debe ser activo o auto archivo")
                 elif not confirmacion_ano:
                     raise ValueError(mensaje_ano)

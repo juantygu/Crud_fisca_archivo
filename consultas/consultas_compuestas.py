@@ -498,7 +498,6 @@ class ConsultasCompuestas():
                 conditions.append("expediente.id_prestamo = %s")
                 values.append(filtros['id_prestamo'])
 
-
             if 'fecha_entrega_inicio' in filtros and filtros['fecha_entrega_inicio']:
                 conditions.append("prestamo.fecha_entrega >= %s")
                 values.append(filtros['fecha_entrega_inicio'])
@@ -615,7 +614,7 @@ consulta = ConsultasCompuestas()
 #}
 
 #filtros = {'fecha_entrega_inicio': '2024-06-04','fecha_entrega_fin': '2024-06-04'}
-#filtros = {'id_contribuyente': '600'}
+#filtros = {'tipo_contribuyente': 'JURIDICO'}
 #result = consulta.buscar_expedientes_filtrados(filtros)
 #print(result)
 

@@ -427,12 +427,16 @@ class PrestamoCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
             # obtener los nuevos datos que deseamos mostrar
-            expedientes = self.consultas_expediente.obtener_ultimo_expediente()
+            mensaje, expedientes = self.consultas_expediente.obtener_ultimo_expediente()
             # print(contribuyentes)
             # insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in expedientes[1]:
-                self.elementos.tree.insert("", "end", values=row)
+            if expedientes:
+                for row in expedientes:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla expedientes esta vacia")
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 

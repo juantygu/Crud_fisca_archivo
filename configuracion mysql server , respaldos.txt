@@ -1,0 +1,48 @@
+link para tutorial https://www.youtube.com/watch?v=_j69k1HFYJs&t=1074s
+
+variable de entorno path (C:\Program Files\MySQL\MySQL Server 8.0\bin) "mysql -u root -p"
+link tutorial https://www.youtube.com/watch?v=OJgeoQV_rL4
+
+IMPORTACION DE DATOS DESDE EXCEL ,CSV , PYTHON A MYSQL
+
+- LA IMPORTACION ES PRIMORDIAL QUE SEA EN FORMATO CSV
+- EL ARCHIVO CSV DEBE ESTAR EN LA RUTA C:/ProgramData/MySQL/MySQL Server 8.0/Uploads , ESTA ES LA RUTA POR DEFECTO
+EN LAS CONFIGURACIONES DE MYSQL
+- EN LA CONFIGURACION DE mysql.connector.connect DEBE ESTAR ESTA VARIABLE QUE DEBE PERMITE LA IMPORTACION Y DA EL PERMISO
+allow_local_infile= True
+- CADA COLUMNA DEL ARCHIVO CSV DEBE ESTAR EN EL FORMATO EXACTO CON LA COLUMNA DE LA BASE DE DATOS , SE DEBE ASEGURAR
+LOS DATOS SEAN LOS MISMOS
+
+LOGICA PARA CARGAR E IMPORTAR LOS DATOS A MYQSL
+
+1- se asegura el formato correcto
+2- se guarda en una variable la ruta donde esta en excel ( que en cada hoja esta la tabla a importar )
+3- se extrae la hoja requerida y se comvierte en un archivo temp csv y se guarda en al ruta C:/ProgramData/MySQL/MySQL Server 8.0/Uploads
+4- se ejecuta el query para la improtacion de los datos
+
+esto se hace en una funcion que me pide como argumento la ruta del archivo excel y el nombre de la hoja y
+el nombre de la tabla a exportar
+
+# Permitir la carga de archivos locales si es necesario
+            cursor.execute("SET GLOBAL local_infile = 1;")
+
+            # Cambiar a la base de datos deseada
+            cursor.execute("USE Archivo_DB;")
+
+            # Comando para cargar los datos desde el archivo CSV temporal
+            load_data_query = """
+            LOAD DATA LOCAL INFILE '{}'
+            INTO TABLE {}
+            FIELDS TERMINATED BY ','
+            ENCLOSED BY '"'
+            LINES TERMINATED BY '\n'
+            IGNORE 1 ROWS
+            """.format(temp_csv_path.replace("\\", "/"), table_name)
+
+
+
+
+
+respaldos
+tutoriales https://www.youtube.com/watch?v=D0s1Y5MEiZY
+https://www.youtube.com/watch?v=U-0SbQgnnGU

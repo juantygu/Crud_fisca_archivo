@@ -30,10 +30,13 @@ class ConsultasGeneral:
         self.proceso = ConsultasProceso()
         self.altura_pantalla = self.interfaz.window_height
         self.ancho_pantalla = self.interfaz.window_width
-        self.opciones_estado = ["activo", "auto archivo"]
-        self.opciones_tipo = ["Natural", "Jurídico"]
+        self.opciones_estado = ["ACTIVO", "AUTO DE ARCHIVO"]
+        self.opciones_tipo = ["NATURAL", "JURIDICA"]
         self.filtros = {}
-
+        self.dic_auditores = {}  # Diccionario para almacenar id_auditor: nombre_auditor
+        self.dic_procesos = {}  # Diccionario para almacenar id_proceso: nombre_proceso
+        self.lista_nombres_auditores = None
+        self.lista_nombres_procesos = None
 
     def mostrar_consultas_general(self):
         """
@@ -47,16 +50,17 @@ class ConsultasGeneral:
             dic_auditores = self.obtener_auditores()  # Obtener el diccionario de auditores
             dic_procesos = self.obtener_procesos()  # Obtener el diccionario de procesos
 
-            if dic_auditores:
-                lista_nombres_auditores = [f"{k}: {v}" for k, v in dic_auditores.items()]  # Obtener solo los nombres de los auditores
-            else:
-                raise ValueError("error al obtener los auditores.")
+            if dic_auditores and dic_procesos:
+                if dic_auditores:
+                    self.lista_nombres_auditores = [f"{k}: {v}" for k, v in dic_auditores.items()]  # Obtener solo los nombres de los auditores
+                else:
+                    raise ValueError("error al obtener los auditores.")
 
-            if dic_procesos:
+                if dic_procesos:
 
-                lista_nombres_procesos = [f"{k}: {v}" for k, v in dic_procesos.items()]
-            else:
-                raise ValueError("error al obtener los procesos.")
+                    self.lista_nombres_procesos = [f"{k}: {v}" for k, v in dic_procesos.items()]
+                else:
+                    raise ValueError("error al obtener los procesos.")
 
             # ==== TITULO ======
             self.elementos.label_titulo = tk.Label(self.ventana_principal, text="CONSULTAS GENERALES",
@@ -118,7 +122,7 @@ class ConsultasGeneral:
 
             # ===== COMBOBOX Auditor =========
             self.elementos.box_id_auditor = ttk.Combobox(self.elementos.label_frame,
-                                                         values=lista_nombres_auditores,
+                                                         values=self.lista_nombres_auditores,
                                                          textvariable=self.elementos.id_variable_auditor,
                                                          font=("Arial", 10),
                                                          width=11, style="EstiloCombobox.TCombobox")
@@ -188,7 +192,7 @@ class ConsultasGeneral:
 
             # ===== COMBOBOX ID_proceso =========
             self.elementos.box_id_proceso = ttk.Combobox(self.elementos.label_frame,
-                                                         values=lista_nombres_procesos,
+                                                         values=self.lista_nombres_procesos,
                                                          textvariable=self.elementos.id_variable_proceso,
                                                          font=("Arial", 10),
                                                          width=11)
@@ -265,6 +269,7 @@ class ConsultasGeneral:
             self.elementos.barra_desplazamiento_v.place(x=1330, y=200, height=379)
             # Configurar el Treeview para usar las Scrollbars
             self.elementos.tree.configure(yscrollcommand=self.elementos.barra_desplazamiento_v.set)
+            self.limpiar_cajas_texto()
 
         except Exception as e:
 
@@ -294,32 +299,36 @@ class ConsultasGeneral:
         Método para obtener la lista de los auditores y su id .
 
         """
-
-        mensaje, auditores = self.auditor.mostrar_nombre_id_auditores()
-        if auditores:
-            #print(mensaje)
-            self.dic_auditores= {auditor[0]: auditor[1] for auditor in auditores}
-            #print(dic_auditores)
-            return self.dic_auditores
-        else:
-            print(mensaje)
-            return None
+        try:
+            mensaje, auditores = self.auditor.mostrar_nombre_id_auditores()
+            if auditores:
+                #print(mensaje)
+                self.dic_auditores= {auditor[0]: auditor[1] for auditor in auditores}
+                #print(dic_auditores)
+                return self.dic_auditores
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla auditores esta vacia")
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
 
     def obtener_procesos(self):
         """
                 Método para obtener la lista de los procesos y su id .
 
                 """
-
-        mensaje, procesos = self.proceso.mostrar_nombre_id_procesos()
-        if procesos:
-            #print(mensaje)
-            self.dic_procesos= {proceso[0]: proceso[1] for proceso in procesos}
-            #print(dic_procesos)
-            return self.dic_procesos
-        else:
-            print(mensaje)
-            return None
+        try:
+            mensaje, procesos = self.proceso.mostrar_nombre_id_procesos()
+            if procesos:
+                #print(mensaje)
+                self.dic_procesos= {proceso[0]: proceso[1] for proceso in procesos}
+                #print(dic_procesos)
+                return self.dic_procesos
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla proceos esta vacia")
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
 
     def limpiar_cajas_texto(self):
         """

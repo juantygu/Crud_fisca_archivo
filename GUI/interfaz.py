@@ -488,9 +488,10 @@ class Interfaz():
             self.elementos.boton_limpiar_cajas.destroy()
             self.elementos.tree.destroy()
             self.elementos.boton_cambiar_id.destroy()
-            self.elementos.label_info.destroy()
-            self.elementos.label_info_procesos.destroy()
-            self.elementos.label_info_auditores.destroy()
+            if self.elementos.label_info:
+                self.elementos.label_info.destroy()
+                self.elementos.label_info_procesos.destroy()
+                self.elementos.label_info_auditores.destroy()
             self.elementos.label_busqueda_id_contribuyente.destroy()
             self.elementos.box_busqueda_id_contribuyente.destroy()
             self.elementos.boton_buscar.destroy()

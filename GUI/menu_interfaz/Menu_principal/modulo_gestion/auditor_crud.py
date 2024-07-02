@@ -158,12 +158,17 @@ class AuditorCrud:
             self.elementos.tree.delete(*self.elementos.tree.get_children())
 
         #obtener los nuevos datos que deseamos mostrar
-            auditores = self.consultas_auditor.mostrar_auditores()
+            mensaje, auditores = self.consultas_auditor.mostrar_auditores()
             #print(auditores)
         #insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
-            for row in auditores[1]:
-                self.elementos.tree.insert("", "end", values=row)
+            if auditores:
+                for row in auditores:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError ("La tabla auditores esta vacia")
+
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 
