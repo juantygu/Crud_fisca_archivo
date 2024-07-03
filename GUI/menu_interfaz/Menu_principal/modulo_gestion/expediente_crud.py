@@ -301,6 +301,7 @@ class ExpedienteCrud:
                                                    fg="black", bg="white", bd=4, relief=tk.GROOVE, width=15, height=2,
                                                    command=self.interfaz.atras)
             self.elementos.boton_atras.place(x=(self.ancho_pantalla - 250), y=(self.altura_pantalla - 150))
+            self.limpiar_cajas_texto()
 
         except ValueError as error:
             # Verificar si el error es debido a un no dígito en id_auditor
@@ -343,7 +344,7 @@ class ExpedienteCrud:
             # =====INFO PROCESOS =====
             procesos_texto = "\n".join([f"{id_proceso} = {nombre_proceso}" for id_proceso, nombre_proceso in dic_procesos.items()])
             self.elementos.label_info_procesos = tk.Label(self.elementos.label_info, text=procesos_texto, font=("Arial", 10, "bold"), bg="#E6F7FF", justify="left")
-            self.elementos.label_info_procesos.place(x=((400 / 2) + 10), y=10)
+            self.elementos.label_info_procesos.place(x=((400 / 2) + 45), y=10)
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
 
