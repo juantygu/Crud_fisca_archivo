@@ -63,7 +63,11 @@ class Expediente:
                     elif len(anos_gravable) + cantidad_anos > 5:
                         print(f"No se puede ingresar ya que el expediente no puede tener mas de 5 años gravables")
                         return f"No se puede ingresar ya que el expediente no puede tener mas de 5 años gravables", False
-
+                mensaje_id_exp_id_cont , verificacion_id_exp_id_cont = self.verificar_id_contribuyente_expediente(id_expediente,id_contribuyente,connection=self.connector)
+                if not verificacion_id_exp_id_cont:
+                    print(mensaje_id_exp_id_cont)
+                    print("hola")
+                    return mensaje_id_exp_id_cont, False
             print("puede continuar con la inserción")
 
             # Verificar si el contribuyente existe , las 3 verificacion usan la misma conexion de base de datos
@@ -147,6 +151,9 @@ class Expediente:
             if "ID duplicado en la tabla expediente." in str(error):
                 self.connector.connection.rollback()
                 return "ID duplicado en la tabla expediente.", False
+            #if "No se puede tener un expiente con dos o mas id_contribuyente" in str(error):
+                #self.connector.connection.rollback()
+                #return "No se puede tener un expiente con dos o mas id_contribuyente.", False
         except Exception as e:
             print(f"Error al insertar en la tabla expediente: {e}")
             self.connector.connection.rollback()
@@ -867,10 +874,11 @@ class Expediente:
 
     def verificar_duplicados(self, id_expediente, lista_anos_gravable, connection=None):
         """
-        Verifica si la combinación de id_expediente y año_gravable ya existe en la base de datos.
+        Verifica si la combinación de id_expediente, id_contribuyente y año_gravable ya existe en la base de datos.
 
         Parameters:
         - id_expediente : ID del expediente a verificar.
+        -id_contribuyente : ID del contribuynete a verificar
         - lista_anos_gravable : Lista de años gravables a verificar.
 
         Returns:
@@ -886,7 +894,7 @@ class Expediente:
             duplicados = []
             for ano_gravable in lista_anos_gravable:
                 # Consulta SQL para verificar la existencia de la combinación
-                query = "SELECT COUNT(*) FROM expediente WHERE id_expediente = %s AND año_gravable = %s"
+                query = "SELECT COUNT(*) FROM expediente WHERE id_expediente = %s  AND año_gravable = %s"
                 values = (id_expediente, ano_gravable)
                 self.connector.execute_query(query, values)
                 resultado = self.connector.fetch_one()
@@ -918,10 +926,60 @@ class Expediente:
                 self.connector.close_connection()
                 print("conexion cerrada")
 
+    def verificar_id_contribuyente_expediente(self, id_expediente, id_contribuyente, connection=None):
+        """
+                Verifica si la combinación de id_expediente, id_contribuyente  existe.
+
+                Parameters:
+                - id_expediente : ID del expediente a verificar.
+                -id_contribuyente : ID del contribuynete a verificar
+                Returns:
+                - mensaje y booleano: Mensaje y booleano indicando si hay duplicados.
+                """
+        try:
+            # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
+            if connection is None:
+                self.connector = BDConnector()
+            else:
+                self.connector = connection
+
+            # Definición de la consulta SQL
+            query = "SELECT COUNT(*) FROM expediente WHERE id_expediente = %s AND id_contribuyente <> %s"
+
+            values = (id_expediente, id_contribuyente)
+            self.connector.execute_query(query, values)
+
+            # Obtención del resultado de la consulta
+            result = self.connector.cursor.fetchone()
+
+            # Extracción del número de filas encontradas (en este caso, el recuento de registros)
+            #count = result[0] if result else 0
+
+            # Verificación del resultado
+            if result[0] > 0:
+                return f"El id_expediente '{id_expediente}' ya está asociado a otro id_contribuyente.", False
+            else:
+                return f"Verificación exitosa: el id_expediente '{id_expediente}' no tiene otro id_contribuyente asociado.", True
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return f"Error de interfaz con MySQL: {interface_err}", False
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return f"Error de MySQL: {mysql_err}", False
+        except Exception as e:
+            print(f"Error al verificar id_contribuyente en expediente: {e}")
+            return f"Error al verificar id_contribuyente en expediente: {e}", False
+        finally:
+            if connection is None and self.connector:
+                # Cerrar la conexión solo si fue creada dentro de la función
+                self.connector.close_connection()
+                print("conexion cerrada")
 
 
 
-#expediente = Expediente()
+
+expediente = Expediente()
 #expediente.insertar_expediente("o0199", "006", "A005", "3", "o10", "activo", [2021,2022])
 #expediente.agregar_ano_gravable("i010", "006", "A003", "3", "o10", "activo", 2022)
 #expediente.eliminar_expediente_por_ano("i12", "2023")
@@ -933,5 +991,7 @@ class Expediente:
 #expediente.contar_anos_gravables("i010")
 #expediente.cambiar_estado_expediente("o011",[2021,2022],"auto archivo")
 #expediente.verificar_combinacion_existe("i011",2015)
+#result= expediente.verificar_id_contribuyente_expediente('I-000','901161564')
 #result = expediente.verificar_duplicados("i13",[2021,2022,2023,2024])
 #print(result)
+

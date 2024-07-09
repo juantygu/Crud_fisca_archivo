@@ -67,9 +67,9 @@ class ExpedienteCrud:
             self.elementos.label_titulo.pack(pady=10)  # pady añade un espacio en la parte inferior de la etiqueta
             # ====LABEL IFRAME====
             self.elementos.label_frame = tk.LabelFrame(self.ventana_principal, text="DATOS DEL EXPEDIENTE",
-                                                       font=("Arial", 16, "bold"), fg="black", bg="#E6F7FF", bd=5,
+                                                       font=("Arial", 16, "bold"), fg="black", bg="#E6F7FF", bd=3,
                                                        relief=tk.RIDGE)
-            self.elementos.label_frame.place(x=30, y=80, width=450, height= 400)
+            self.elementos.label_frame.place(x=15, y=80, width=450, height= 400)
 
             # =========== ETIQUETA ID_EXPEDIENTE =============
             self.elementos.label_id_expediente = tk.Label(self.elementos.label_frame, text="ID_expediente",
@@ -86,6 +86,7 @@ class ExpedienteCrud:
             self.elementos.box_id_expediente.place(x=150, y=10)
             self.elementos.box_id_expediente.delete(0, tk.END)
 
+
             # ======== ETIQUETA ID_CONTRIBUYENTE ==============
             self.elementos.label_id_contribuyente = tk.Label(self.elementos.label_frame, text="ID_contribuyente",
                                                              font=("Arial", 11, "bold"),
@@ -101,6 +102,7 @@ class ExpedienteCrud:
             self.elementos.box_id_contribuyente.place(x=150, y=50)
             self.elementos.box_id_contribuyente.delete(0, tk.END)
 
+
             # ===== ETIQUETA ID_Auditor ======
             self.elementos.label_id_auditor = tk.Label(self.elementos.label_frame, text="ID_auditor",
                                                        font=("Arial", 11, "bold"),
@@ -114,6 +116,7 @@ class ExpedienteCrud:
                                                               font=("Arial", 10),
                                                               width=11, style="EstiloCombobox.TCombobox")
             self.elementos.box_id_auditor.place(x=150, y=90)
+            self.elementos.box_id_auditor.set('')
 
             # =====ETIQUETA ID_proceso ======
             self.elementos.label_id_proceso = tk.Label(self.elementos.label_frame, text="ID_proceso",
@@ -128,6 +131,7 @@ class ExpedienteCrud:
                                                               font=("Arial", 10),
                                                               width=11)
             self.elementos.box_id_proceso.place(x=150, y=130)
+            self.elementos.box_id_proceso.set('')
 
 
             # =====ETIQUETA ID_caja ======
@@ -156,6 +160,7 @@ class ExpedienteCrud:
                                                               font=("Arial", 10),
                                                               width=11)
             self.elementos.box_estado.place(x=150, y=210)
+            self.elementos.box_estado.set('')
 
             # =====ETIQUETA año gravable ======
             self.elementos.label_año_gravable = tk.Label(self.elementos.label_frame, text="Años gravables",
@@ -269,10 +274,10 @@ class ExpedienteCrud:
 
             style = ttk.Style()
             style.theme_use("alt")
-            style.configure('Treeview.Heading', font=('Arial', 12, 'bold'))
-            style.configure('Treeview', font=('Arial', 12))
+            style.configure('Treeview.Heading', font=('Arial', 11, 'bold'))
+            style.configure('Treeview', font=('Arial', 9))
 
-            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_expediente', 'ID_contribuyente', 'ID_auditor','ID_proceso','ID_caja','Estado','Año gravable'),
+            self.elementos.tree = ttk.Treeview(self.ventana_principal, columns=('ID_expediente', 'ID_contribuyente', 'ID_auditor','ID_proceso','ID_prestamo','ID_caja','Estado','Año'),
                                                show='headings', height=10)
             self.elementos.tree.heading('ID_expediente', text='ID_expediente')
             self.elementos.tree.column('ID_expediente', width=115, anchor='center')
@@ -281,16 +286,18 @@ class ExpedienteCrud:
             self.elementos.tree.heading('ID_auditor', text='ID_auditor')
             self.elementos.tree.column('ID_auditor', width=100, anchor='center')
             self.elementos.tree.heading('ID_proceso', text='ID_proceso')
-            self.elementos.tree.column('ID_proceso', width=110, anchor='center')
+            self.elementos.tree.column('ID_proceso', width=100, anchor='center')
+            self.elementos.tree.heading('ID_prestamo', text='ID_prestamo')
+            self.elementos.tree.column('ID_prestamo', width=100, anchor='center')
             self.elementos.tree.heading('ID_caja', text='ID_caja')
-            self.elementos.tree.column('ID_caja', width=100, anchor='center')
+            self.elementos.tree.column('ID_caja', width=95, anchor='center')
             self.elementos.tree.heading('Estado', text='Estado')
-            self.elementos.tree.column('Estado', width=110, anchor='center')
-            self.elementos.tree.heading('Año gravable', text='Año gravable')
-            self.elementos.tree.column('Año gravable', width=115, anchor='center')
+            self.elementos.tree.column('Estado', width=120, anchor='center')
+            self.elementos.tree.heading('Año', text='Año')
+            self.elementos.tree.column('Año', width=60, anchor='center')
 
 
-            self.elementos.tree.place(x=((self.ancho_pantalla / 2)-130), y=150)
+            self.elementos.tree.place(x=((self.ancho_pantalla / 2)-190), y=150)
             #  =======MOSTRAR DATOS  ===========
             self.actualizar_tree_expediente()
             # Enlace del evento para seleccionar registros
@@ -361,6 +368,7 @@ class ExpedienteCrud:
                 raise ValueError("La tabla proceos esta vacia")
         except ValueError as error:
             print(f"fError al actualizar tabla : {error}")
+
     def busqueda_por_id_contribuyente(self):
         """
                         Método para buscar por id_contribuyente.
@@ -403,7 +411,6 @@ class ExpedienteCrud:
         else:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
 
-
     def actualizar_tree_expediente(self):
         """
                 Método para actualizar la tabla de expedientes en la interfaz gráfica.
@@ -442,6 +449,7 @@ class ExpedienteCrud:
             if itemseleccionado:
                 self.elementos.box_id_expediente.config(state=tk.NORMAL)
                 self.elementos.box_año_gravable.config(state=tk.NORMAL)
+                self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
                 #obtener valores
                 values = self.elementos.tree.item(itemseleccionado)['values']
                 #establecer los valores en los widgests entry
@@ -454,16 +462,17 @@ class ExpedienteCrud:
                 self.elementos.box_id_proceso.delete(0, tk.END)
                 self.elementos.box_id_proceso.set(values[3])
                 self.elementos.box_id_caja.delete(0, tk.END)
-                self.elementos.box_id_caja.insert(0, values[4])
+                self.elementos.box_id_caja.insert(0, values[5])
                 self.elementos.box_estado.delete(0, tk.END)
-                self.elementos.box_estado.set(values[5])
+                self.elementos.box_estado.set(values[6])
                 self.elementos.box_año_gravable.delete(0, tk.END)
-                self.elementos.box_año_gravable.insert(0, values[6])
+                self.elementos.box_año_gravable.insert(0, values[7])
 
                 # Deshabilitar el botón "Insertar" y self.elementos.box_id
                 self.elementos.boton_insertar.config(state=tk.DISABLED)
                 self.elementos.box_id_expediente.config(state=tk.DISABLED)
                 self.elementos.box_año_gravable.config(state=tk.DISABLED)
+                self.elementos.box_id_contribuyente.config(state=tk.DISABLED)
 
         except ValueError as error:
             print(f"fError al seleccionar registro : {error}")
@@ -479,6 +488,7 @@ class ExpedienteCrud:
             self.elementos.boton_insertar.config(state=tk.NORMAL)
             self.elementos.box_id_expediente.config(state=tk.NORMAL)
             self.elementos.box_año_gravable.config(state=tk.NORMAL)
+            self.elementos.box_id_contribuyente.config(state=tk.NORMAL)
 
         self.elementos.box_id_expediente.delete(0, tk.END)
         self.elementos.box_id_contribuyente.delete(0, tk.END)

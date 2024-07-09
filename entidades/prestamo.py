@@ -59,6 +59,7 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
             mensaje_prestamo,id_generado, verificacion_insertar = self.insertar_prestamo(fecha_entrega,responsable,area,connection=self.connector)
             # verificar la insercion a la tabla prestamo
             if verificacion_insertar: # true si se hizo la insercion a la tabla prestamo
+
                 print(mensaje_prestamo, id_generado, verificacion_insertar)
 
                 mensaje_expediente,verificacion_vincular = self.insertar_id_prestamo_expediente(expedientes, id_generado,connection=self.connector)
@@ -185,6 +186,10 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
             else:
                 self.connector = connection
 
+            expected_rowcount,verificacion = self.contar_registros_expedientes(id_expedientes, connection=self.connector)
+            if not verificacion:
+                return "Error al contar los registros de expedientes.", False
+            print(verificacion)
             # Consulta SQL para la inserción
             placeholders = ",".join(["%s"] * len(id_expedientes))
             query = f"UPDATE expediente SET id_prestamo = %s WHERE id_expediente IN ({placeholders})"
@@ -198,8 +203,8 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
             if connection is None:
                 self.connector.connection.commit()
 
-            expected_rowcount = len(id_expedientes) # numero de expedientes a vincular
             rowcounts = self.connector.cursor.rowcount # numero de registos modificados
+            print(rowcounts,expected_rowcount)
             # verificacion si el numero de registros modificados es igual al los expedientes a vincular
             if rowcounts > 0:
                 if rowcounts == expected_rowcount:
@@ -294,7 +299,7 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
                     # NO se realizo la devolucion
                     print(mensaje_devolucion)
                     self.connector.connection.rollback()
-                    return mensaje_existencia, False
+                    return mensaje_devolucion, False
             else:
                 # el prestamo ya tiene devolucion ,  no se puede hacer la devolucion
                 print(mensaje_devuelto)
@@ -851,6 +856,50 @@ class Prestamo: # logica relacionada con la tabla PRESTAMO
                 # Cerrar la conexión solo si fue creada dentro de la función
                 self.connector.close_connection()
 
+    def contar_registros_expedientes(self, id_expedientes, connection=None):
+        """
+        Cuenta el número total de registros para uno o varios id_expedientes.
+
+        Parameters:
+        - id_expedientes : Puede ser un solo ID de expediente o una lista de ID de expedientes.
+
+        Returns:
+        - total_registros : Número total de registros para los id_expedientes proporcionados.
+        - success : Booleano que indica si la operación fue exitosa.
+        """
+        try:
+            # Utilizar la conexión proporcionada o crear una nueva instancia de BDConnector
+            if connection is None:
+                self.connector = BDConnector()
+            else:
+                self.connector = connection
+            # Convertir a lista si se recibe un solo id_expediente
+            if not isinstance(id_expedientes, list):
+                id_expedientes = [id_expedientes]
+
+            total_registros = 0
+            for id_exp in id_expedientes:
+                query_conteo = "SELECT COUNT(*) FROM expediente WHERE id_expediente = %s"
+                self.connector.execute_query(query_conteo, (id_exp,))
+                resultado_conteo = self.connector.cursor.fetchone()
+                if resultado_conteo:
+                    total_registros += resultado_conteo[0]
+                else:
+                    print(f"No se encontraron registros para el id_expediente {id_exp}.")
+                    return 0, False
+            return total_registros, True
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return 0, False
+        except Exception as e:
+            print(f"Error al contar registros: {e}")
+            return 0, False
+        finally:
+            if connection is None and self.connector:
+                # Cerrar la conexión solo si fue creada dentro de la función
+                self.connector.close_connection()
+
+
 
 prestamo = Prestamo()
 
@@ -869,7 +918,7 @@ prestamo = Prestamo()
 #prestamo.eliminar_registro_prestamo(2)
 #prestamo.eliminar_prestamo_con_verificacion(16)
 
-#prestamo.desvincular_prestamo_expediente("14")
+#prestamo.desvincular_prestamo_expediente("1")
 
 #fecha_entrega=prestamo.obtener_fecha_entrega(1)
 #print (fecha_entrega)
@@ -881,3 +930,5 @@ prestamo = Prestamo()
 #prestamo.verificar_prestamo_devuelto(6)
 #prestamo.verificar_prestamos_asociados(50)
 #prestamo.verificar_existencia_prestamo(21)
+#result= prestamo.contar_registros_expedientes(["OAR-017","OAR-016","OAR-015"])
+#print(result)

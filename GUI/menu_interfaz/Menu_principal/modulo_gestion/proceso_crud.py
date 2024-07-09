@@ -69,6 +69,7 @@ class ProcesoCrud:
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
                                                    width=14)
             self.elementos.box_tipo.place(x=145, y=60)
+            self.elementos.box_tipo.set('')
 
             # ====== BOTON INSERTAR =====
             self.elementos.boton_insertar = tk.Button(self.elementos.label_frame, text="Insertar", font=("Arial", 12, "bold"),

@@ -575,6 +575,83 @@ class ConsultasCompuestas():
         finally:
             if self.connector:
                 self.connector.close_connection()
+
+    def buscar_prestamos_activos(self):
+        """
+        Busca préstamos activos.
+
+        Returns:
+            tuple: Una tupla que contiene el mensaje de estado, los encabezados y los datos de los préstamos encontrados.
+                   Si se encontraron préstamos, el mensaje de estado será "Muestra de préstamos exitosa",
+                   de lo contrario, será "No se encontraron datos de préstamos".
+                   Los encabezados son los nombres de las columnas de la tabla de préstamos y otras.
+                   Los datos de los préstamos son una lista de tuplas, donde cada tupla representa una fila de datos.
+                   En caso de error, se devuelve None para todos los valores de retorno.
+        """
+        try:
+            self.connector = BDConnector()
+            query = """
+            SELECT 
+                contribuyente.nombre_contribuyente, 
+                expediente.id_contribuyente, 
+                auditor.nombre_auditor, 
+                contribuyente.tipo, 
+                procesos.nombre_proceso, 
+                expediente.id_expediente, 
+                expediente.id_caja, 
+                expediente.estado, 
+                expediente.año_gravable, 
+                expediente.id_prestamo, 
+                prestamo.fecha_entrega, 
+                prestamo.fecha_devolucion, 
+                prestamo.responsable, 
+                prestamo.area 
+            FROM 
+                expediente 
+            INNER JOIN 
+                auditor ON expediente.id_auditor = auditor.id_auditor 
+            INNER JOIN 
+                contribuyente ON expediente.id_contribuyente = contribuyente.id_contribuyente 
+            INNER JOIN 
+                procesos ON expediente.id_proceso = procesos.id_proceso 
+            INNER JOIN 
+                prestamo ON expediente.id_prestamo = prestamo.id_prestamo 
+            WHERE 
+                expediente.id_prestamo IS NOT NULL
+            """
+
+            # Ejecutar la consulta
+            self.connector.execute_query(query)
+
+            # Obtener resultados y encabezados
+            encabezados = [i[0] for i in self.connector.cursor.description]
+
+            # Obtener los resultados
+            prestamos = self.connector.fetch_all()
+
+            if prestamos:
+                print("Muestra de préstamos exitosa")
+                return "Muestra de préstamos exitosa", encabezados, prestamos, True
+            else:
+                print("No se encontraron datos de préstamos")
+                return "No se encontraron datos de préstamos", None, None, False
+
+        except mysql.connector.InterfaceError as interface_err:
+            print(f"Error de interfaz con MySQL: {interface_err}")
+            return "Error de interfaz", None, None, False
+        except mysql.connector.DatabaseError as db_err:
+            print(f"Error de la base de datos: {db_err}")
+            return "Error de la base de datos", None, None, False
+        except mysql.connector.Error as mysql_err:
+            print(f"Error de MySQL: {mysql_err}")
+            return "Error de MySQL", None, None, False
+        except Exception as e:
+            print(f"Error al obtener datos del préstamo: {e}")
+            return "Error al obtener datos del préstamo", None, None, False
+        finally:
+            if self.connector:
+                self.connector.close_connection()
+
     def imprimir_resultados(self, resultado):
         """
                 Imprime los resultados de la consulta en forma tabular.
@@ -602,6 +679,7 @@ consulta = ConsultasCompuestas()
 #result = consulta.buscar_expedientes_por_proceso(nombre_proceso="omisos")
 #result = consulta.buscar_expedientes_por_estado(estado="activo")
 #result = consulta.buscar_expedientes_por_año(2018)
+#result = consulta.buscar_prestamos_activos()
 
 #filtros = {
     #'nombre_auditor': 'luis',

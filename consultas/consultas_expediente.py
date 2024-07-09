@@ -59,7 +59,7 @@ class ConsultasExpediente:
         """
         try:
             self.connector = BDConnector()
-            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_caja, estado, año_gravable FROM expediente WHERE id_contribuyente = %s"
+            query = "SELECT id_expediente, id_contribuyente, id_auditor, id_proceso,id_prestamo, id_caja, estado, año_gravable FROM expediente WHERE id_contribuyente = %s"
             values = (id_contribuyente,)
             self.connector.execute_query(query, values)
             expedientes = self.connector.fetch_all()
@@ -474,7 +474,7 @@ class ConsultasExpediente:
         try:
             self.connector = BDConnector()
             query = """
-                SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_caja, estado, año_gravable 
+                SELECT id_expediente, id_contribuyente, id_auditor, id_proceso, id_prestamo, id_caja, estado, año_gravable 
                 FROM expediente 
                 WHERE fecha_modificacion <= (
                     SELECT fecha_modificacion 

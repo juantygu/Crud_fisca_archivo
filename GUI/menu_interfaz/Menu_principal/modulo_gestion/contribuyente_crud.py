@@ -72,6 +72,7 @@ class ContribuyenteCrud:
                                                    textvariable=self.elementos.tipo_variable, font=("Arial", 12),
                                                    width=12)
             self.elementos.box_tipo.place(x=161, y=60)
+            self.elementos.box_tipo.set('')
 
             # ===== ETIQUETA NOMBRE ======
             self.elementos.label_nombre = tk.Label(self.elementos.label_frame, text="Nombre", font=("Arial", 12, "bold"),

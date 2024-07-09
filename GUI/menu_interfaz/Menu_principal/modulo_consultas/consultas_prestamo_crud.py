@@ -214,6 +214,7 @@ class ConsultasPrestamosActivos:
 
             self.elementos.tree.place(x=30, y=200)
             #  =======MOSTRAR DATOS  ===========
+            self.mostrar_prestamos_activos()
 
             # Enlace del evento para seleccionar registros
             self.elementos.tree.bind("<<TreeviewSelect>>", self.selecionar_registro_tabla)
@@ -224,6 +225,7 @@ class ConsultasPrestamosActivos:
             self.elementos.barra_desplazamiento_v.place(x=1330, y=200, height=379)
             # Configurar el Treeview para usar las Scrollbars
             self.elementos.tree.configure(yscrollcommand=self.elementos.barra_desplazamiento_v.set)
+            self.limpiar_cajas_texto()
 
         except Exception as e:
 
@@ -383,3 +385,27 @@ class ConsultasPrestamosActivos:
             messagebox.showerror("Error", "Todas las cajas de texto deben tener un valor.")
             self.filtros = {}
             self.limpiar_cajas_texto()
+
+    def mostrar_prestamos_activos(self):
+        try:
+            #borrar elementos actuales del tree contribuyente
+            # devuelve una lista de identificadores de elementos secundarios
+            # , y el operador * se utiliza para pasar esos identificadores
+            # como argumentos separados a la función delete.
+            self.elementos.tree.delete(*self.elementos.tree.get_children())
+
+        #obtener los nuevos datos que deseamos mostrar
+            mensaje,encabezados,expedientes,confimacion = self.consultas.buscar_prestamos_activos()
+            #print(contribuyentes)
+        #insertar lo nuevos datos  en el tree
+            # mostrar datos en la tabla
+            if expedientes:
+                for row in expedientes:
+                    self.elementos.tree.insert("", "end", values=row)
+            else:
+                messagebox.showinfo("Información", "No hay datos disponibles para mostrar.")
+                raise ValueError("La tabla expedientes esta vacia")
+
+        except ValueError as error:
+            print(f"fError al actualizar tabla : {error}")
+

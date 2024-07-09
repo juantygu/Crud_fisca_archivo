@@ -89,6 +89,7 @@ class PrestamoCrud:
                                                          font=("Arial", 10),
                                                          width=11,state='readonly')
             self.elementos.box_id_proceso.place(x=200, y=155)
+            self.elementos.box_id_proceso.set('')
 
             # =====ETIQUETA año gravable ======
             self.elementos.label_año_gravable = tk.Label(self.ventana_principal, text="Años gravables",
@@ -252,6 +253,8 @@ class PrestamoCrud:
                                                textvariable=self.elementos.area_variable, font=("Arial", 10),
                                                width=19)
         self.elementos.box_area.place(x=160, y=60)
+        self.elementos.box_area.set('')
+
         # =====ETIQUETA expedientes =========
         self.elementos.label_id_expediente = tk.Label(self.elementos.label_frame, text="Expedientes",
                                                       font=("Arial", 10, "bold"),
@@ -428,7 +431,7 @@ class PrestamoCrud:
 
             # obtener los nuevos datos que deseamos mostrar
             mensaje, expedientes = self.consultas_expediente.obtener_ultimo_expediente()
-            # print(contribuyentes)
+            print(expedientes)
             # insertar lo nuevos datos  en el tree
             # mostrar datos en la tabla
             if expedientes:
@@ -665,7 +668,10 @@ class PrestamoCrud:
                         messagebox.showinfo("INFORMACIÓN", "El prestamo finalizado.")
                         self.limpiar_cajas_finalizar_prestamo()
                     else:
-                        messagebox.showerror("INFORMACIÓN", "No se finalizó el prestamo.")
+                        #messagebox.showerror("INFORMACIÓN", "No se finalizó el prestamo.")
+                        print(mensaje_finalizacion)
+                        messagebox.showinfo("INFORMACIÓN",mensaje_finalizacion)
+
                 else:
                     print("El ID de préstamo no es un número válido:", id_prestamo)
                     raise ValueError("ID Prestamo no es un digito.")
