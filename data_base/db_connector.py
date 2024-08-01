@@ -22,12 +22,7 @@ class BDConnector:
         self.password = None
         self.database = None
         self.load_config_bd()
-        #self.connection = mysql.connector.connect(
-            #host='localhost',
-            #user='root',
-            #password="1693",
-            #database="archivo_db"
-        #)
+
         self.connection = mysql.connector.connect(
             host=self.host,
             user=self.user,

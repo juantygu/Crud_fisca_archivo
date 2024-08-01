@@ -43,6 +43,13 @@ el nombre de la tabla a exportar
 
 
 
-respaldos
+RESPALDOS
+COMANDOS
+
+mysqldump --user=root --password=your_password --databases archivo_db --triggers --routines --events > "D:\PROYECTO CRUD ARCHIVO FISCALIZACION\respaldos\archivo_db.sql"
+Este proceso se puede automatizar con el programador de tareas ejecutando un arcihvo .bat donde contenga la instrcuccion o un archivo python
+
 tutoriales https://www.youtube.com/watch?v=D0s1Y5MEiZY
 https://www.youtube.com/watch?v=U-0SbQgnnGU
+https://www.youtube.com/watch?v=U-0SbQgnnGU&t=480s
+https://www.youtube.com/watch?v=6kPIiY4La8Q
